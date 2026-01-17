@@ -8,16 +8,56 @@
         <translation>Kutsal Kitaplar Gezgini</translation>
     </message>
     <message>
+        <source>📖 Book:</source>
+        <translation>📖 Kitap:</translation>
+    </message>
+    <message>
+        <source>📗 Quran</source>
+        <translation>📗 Kuran-ı Kerim</translation>
+    </message>
+    <message>
+        <source>📕 Gospel</source>
+        <translation>📕 İncil</translation>
+    </message>
+    <message>
+        <source>📘 Torah</source>
+        <translation>📘 Tevrat</translation>
+    </message>
+    <message>
+        <source>📙 Psalms</source>
+        <translation>📙 Zebur</translation>
+    </message>
+    <message>
         <source>Book:</source>
         <translation>Kitap:</translation>
+    </message>
+    <message>
+        <source>📑 Chapter/Sure:</source>
+        <translation>📑 Bölüm/Sure:</translation>
     </message>
     <message>
         <source>Chapter/Sura:</source>
         <translation>Bölüm/Sure:</translation>
     </message>
     <message>
+        <source>🔄 Sort Order:</source>
+        <translation>🔄 Sıralama:</translation>
+    </message>
+    <message>
         <source>Sort Order:</source>
         <translation>Sıralama:</translation>
+    </message>
+    <message>
+        <source>Default Order</source>
+        <translation>Varsayılan Sıra</translation>
+    </message>
+    <message>
+        <source>Verse Length (Shortest First)</source>
+        <translation>Ayet Uzunluğu (En Kısa Önce)</translation>
+    </message>
+    <message>
+        <source>Verse Length (Longest First)</source>
+        <translation>Ayet Uzunluğu (En Uzun Önce)</translation>
     </message>
     <message>
         <source>By Sura Number</source>
@@ -28,6 +68,10 @@
         <translation>İniş Sırasına Göre</translation>
     </message>
     <message>
+        <source>🔍 Search:</source>
+        <translation>🔍 Arama:</translation>
+    </message>
+    <message>
         <source>Search:</source>
         <translation>Arama:</translation>
     </message>
@@ -36,8 +80,16 @@
         <translation>Aramak için kelime girin...</translation>
     </message>
     <message>
+        <source>🔍 Search</source>
+        <translation>🔍 Ara</translation>
+    </message>
+    <message>
         <source>Search</source>
         <translation>Ara</translation>
+    </message>
+    <message>
+        <source>✖ Clear</source>
+        <translation>✖ Temizle</translation>
     </message>
     <message>
         <source>Clear</source>
@@ -50,6 +102,14 @@
     <message>
         <source>&amp;Open Database...</source>
         <translation>&amp;Veritabanı Aç...</translation>
+    </message>
+    <message>
+        <source>Export &amp;Chapter...</source>
+        <translation>&amp;Bölümü Dışa Aktar...</translation>
+    </message>
+    <message>
+        <source>Export &amp;Search Results...</source>
+        <translation>&amp;Arama Sonuçlarını Dışa Aktar...</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
@@ -92,6 +152,10 @@
         <translation>Veritabanı başarıyla yüklendi</translation>
     </message>
     <message>
+        <source>Please open a database file (File → Open Database)</source>
+        <translation>Lütfen bir veritabanı dosyası açın (Dosya → Veritabanı Aç)</translation>
+    </message>
+    <message>
         <source>Search cleared</source>
         <translation>Arama temizlendi</translation>
     </message>
@@ -110,6 +174,34 @@
     <message>
         <source>Warning</source>
         <translation>Uyarı</translation>
+    </message>
+    <message>
+        <source>No verses to export.</source>
+        <translation>Dışa aktarılacak ayet yok.</translation>
+    </message>
+    <message>
+        <source>Export Chapter</source>
+        <translation>Bölümü Dışa Aktar</translation>
+    </message>
+    <message>
+        <source>Text Files (*.txt);;All Files (*)</source>
+        <translation>Metin Dosyaları (*.txt);;Tüm Dosyalar (*)</translation>
+    </message>
+    <message>
+        <source>Chapter exported to: %1</source>
+        <translation>Bölüm şuraya aktarıldı: %1</translation>
+    </message>
+    <message>
+        <source>Failed to save file.</source>
+        <translation>Dosya kaydedilemedi.</translation>
+    </message>
+    <message>
+        <source>Language Changed</source>
+        <translation>Dil Değiştirildi</translation>
+    </message>
+    <message>
+        <source>Language will be fully applied after restarting the application.</source>
+        <translation>Dil değişikliği uygulamayı yeniden başlattıktan sonra tam olarak uygulanacak.</translation>
     </message>
 </context>
 <context>

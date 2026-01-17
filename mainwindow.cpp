@@ -11,6 +11,8 @@
 #include <QTextStream>
 #include <QApplication>
 #include <QStyle>
+#include <QTranslator>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent)
     , m_showArabic(true)
     , m_showLatin(true)
     , m_highlightColor(Qt::yellow)
+    , m_bookLabel(nullptr)
+    , m_chapterLabel(nullptr)
+    , m_sortLabel(nullptr)
+    , m_searchLabel(nullptr)
 {
     ui->setupUi(this);
     setupUi();
@@ -51,125 +57,141 @@ MainWindow::~MainWindow()
 
 void MainWindow::applyDarkTheme()
 {
-    // Ana pencere koyu tema
-    QString darkStyle = R"(
+    // Koyu mavi tema
+    QString darkBlueStyle = R"(
         QMainWindow {
-            background-color: #1E1E1E;
+            background-color: #0F192D;
         }
         QWidget {
-            background-color: #1E1E1E;
-            color: #E0E0E0;
+            background-color: #0F192D;
+            color: #DCE6F5;
         }
         QMenuBar {
-            background-color: #2D2D2D;
-            color: #E0E0E0;
-            border-bottom: 1px solid #3D3D3D;
+            background-color: #192841;
+            color: #DCE6F5;
+            border-bottom: 1px solid #2D558C;
         }
         QMenuBar::item:selected {
-            background-color: #3D3D3D;
+            background-color: #2D558C;
         }
         QMenu {
-            background-color: #2D2D2D;
-            color: #E0E0E0;
-            border: 1px solid #3D3D3D;
+            background-color: #192841;
+            color: #DCE6F5;
+            border: 1px solid #2D558C;
         }
         QMenu::item:selected {
-            background-color: #3D3D3D;
+            background-color: #2D558C;
         }
         QToolBar {
-            background-color: #2D2D2D;
+            background-color: #192841;
             border: none;
             spacing: 5px;
             padding: 3px;
         }
         QToolButton {
-            background-color: #3D3D3D;
-            color: #E0E0E0;
-            border: 1px solid #4D4D4D;
+            background-color: #2D558C;
+            color: #DCE6F5;
+            border: 1px solid #4575A0;
             border-radius: 3px;
             padding: 5px 10px;
         }
         QToolButton:hover {
-            background-color: #4D4D4D;
+            background-color: #3D6DB0;
         }
         QComboBox {
-            background-color: #3D3D3D;
-            color: #E0E0E0;
-            border: 1px solid #4D4D4D;
+            background-color: #192841;
+            color: #DCE6F5;
+            border: 1px solid #2D558C;
             border-radius: 3px;
             padding: 5px 8px;
             min-height: 25px;
         }
         QComboBox:hover {
-            border-color: #5D5D5D;
+            border-color: #4575A0;
         }
         QComboBox::drop-down {
             border: none;
             width: 20px;
         }
         QComboBox QAbstractItemView {
-            background-color: #3D3D3D;
-            color: #E0E0E0;
-            selection-background-color: #505050;
-            border: 1px solid #4D4D4D;
+            background-color: #192841;
+            color: #DCE6F5;
+            selection-background-color: #2D558C;
+            border: 1px solid #2D558C;
         }
         QLineEdit {
-            background-color: #3D3D3D;
-            color: #E0E0E0;
-            border: 1px solid #4D4D4D;
+            background-color: #192841;
+            color: #DCE6F5;
+            border: 1px solid #2D558C;
             border-radius: 3px;
             padding: 5px 8px;
         }
         QLineEdit:focus {
-            border-color: #6D6D6D;
+            border-color: #6496DC;
         }
         QPushButton {
-            background-color: #3D3D3D;
-            color: #E0E0E0;
-            border: 1px solid #4D4D4D;
+            background-color: #2D558C;
+            color: #DCE6F5;
+            border: 1px solid #4575A0;
             border-radius: 3px;
             padding: 6px 12px;
         }
         QPushButton:hover {
-            background-color: #4D4D4D;
+            background-color: #3D6DB0;
         }
         QPushButton:pressed {
-            background-color: #2D2D2D;
+            background-color: #1D4570;
         }
         QScrollArea {
-            background-color: #252525;
+            background-color: #0F192D;
             border: none;
         }
         QScrollBar:vertical {
-            background-color: #2D2D2D;
+            background-color: #192841;
             width: 12px;
             border-radius: 6px;
         }
         QScrollBar::handle:vertical {
-            background-color: #4D4D4D;
+            background-color: #2D558C;
             border-radius: 5px;
             min-height: 30px;
         }
         QScrollBar::handle:vertical:hover {
-            background-color: #5D5D5D;
+            background-color: #4575A0;
         }
         QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
             height: 0px;
         }
+        QScrollBar:horizontal {
+            background-color: #192841;
+            height: 12px;
+            border-radius: 6px;
+        }
+        QScrollBar::handle:horizontal {
+            background-color: #2D558C;
+            border-radius: 5px;
+            min-width: 30px;
+        }
+        QScrollBar::handle:horizontal:hover {
+            background-color: #4575A0;
+        }
+        QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+            width: 0px;
+        }
         QLabel {
-            color: #E0E0E0;
+            color: #DCE6F5;
         }
         QStatusBar {
-            background-color: #2D2D2D;
-            color: #A0A0A0;
-            border-top: 1px solid #3D3D3D;
+            background-color: #192841;
+            color: #90CAF9;
+            border-top: 1px solid #2D558C;
         }
         QSplitter::handle {
-            background-color: #3D3D3D;
+            background-color: #2D558C;
         }
     )";
-    
-    setStyleSheet(darkStyle);
+
+    setStyleSheet(darkBlueStyle);
 }
 
 void MainWindow::setupUi()
@@ -188,40 +210,41 @@ void MainWindow::setupUi()
     leftLayout->setSpacing(8);
     
     // Book selection
-    QLabel *bookLabel = new QLabel(tr("📖 Book:"), leftPanel);
-    bookLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9;");
-    leftLayout->addWidget(bookLabel);
+    m_bookLabel = new QLabel(tr("📖 Book:"), leftPanel);
+    m_bookLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9;");
+    leftLayout->addWidget(m_bookLabel);
     
     m_bookCombo = new QComboBox(leftPanel);
-    m_bookCombo->addItem("📗 Kuran-ı Kerim", "Kuran");
-    m_bookCombo->addItem("📕 İncil", "İncil");
-    m_bookCombo->addItem("📘 Tevrat", "Tevrat");
-    m_bookCombo->addItem("📙 Zebur", "Zebur");
+    m_bookCombo->addItem(tr("📗 Quran"), "Kuran");
+    m_bookCombo->addItem(tr("📕 Gospel"), "İncil");
+    m_bookCombo->addItem(tr("📘 Torah"), "Tevrat");
+    m_bookCombo->addItem(tr("📙 Psalms"), "Zebur");
     leftLayout->addWidget(m_bookCombo);
     
     // Chapter selection
-    QLabel *chapterLabel = new QLabel(tr("📑 Chapter/Sure:"), leftPanel);
-    chapterLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9;");
-    leftLayout->addWidget(chapterLabel);
+    m_chapterLabel = new QLabel(tr("📑 Chapter/Sure:"), leftPanel);
+    m_chapterLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9;");
+    leftLayout->addWidget(m_chapterLabel);
     
     m_chapterCombo = new QComboBox(leftPanel);
     m_chapterCombo->setMaxVisibleItems(20);
     leftLayout->addWidget(m_chapterCombo);
     
     // Sort order (for Quran)
-    QLabel *sortLabel = new QLabel(tr("🔄 Sort Order:"), leftPanel);
-    sortLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9;");
-    leftLayout->addWidget(sortLabel);
+    m_sortLabel = new QLabel(tr("🔄 Sort Order:"), leftPanel);
+    m_sortLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9;");
+    leftLayout->addWidget(m_sortLabel);
     
     m_sortCombo = new QComboBox(leftPanel);
-    m_sortCombo->addItem(tr("By Sura Number"), "number");
-    m_sortCombo->addItem(tr("By Revelation Order"), "revelation");
+    m_sortCombo->addItem(tr("Default Order"), "number");
+    m_sortCombo->addItem(tr("Verse Length (Shortest First)"), "short");
+    m_sortCombo->addItem(tr("Verse Length (Longest First)"), "long");
     leftLayout->addWidget(m_sortCombo);
     
     // Search
-    QLabel *searchLabel = new QLabel(tr("🔍 Search:"), leftPanel);
-    searchLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9;");
-    leftLayout->addWidget(searchLabel);
+    m_searchLabel = new QLabel(tr("🔍 Search:"), leftPanel);
+    m_searchLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9;");
+    leftLayout->addWidget(m_searchLabel);
     
     m_searchEdit = new QLineEdit(leftPanel);
     m_searchEdit->setPlaceholderText(tr("Enter keyword to search..."));
@@ -373,8 +396,12 @@ void MainWindow::loadSettings()
     m_appFont.setPointSize(settings.value("font/size", 11).toInt());
     applyFont(m_appFont);
     
-    // Language
+    // Language - Default Türkçe
     m_language = settings.value("language", "tr").toString();
+    if (m_language.isEmpty() || (m_language != "tr" && m_language != "en")) {
+        m_language = "tr";
+        settings.setValue("language", "tr");
+    }
     m_wordAnalysisWidget->setLanguage(m_language);
     
     // Display options
@@ -603,6 +630,8 @@ void MainWindow::onSettings()
     dialog.setHighlightColor(m_highlightColor);
     
     if (dialog.exec() == QDialog::Accepted) {
+        QString oldLanguage = m_language;
+        
         m_appFont = dialog.selectedFont();
         m_language = dialog.selectedLanguage();
         m_showArabic = dialog.showArabic();
@@ -610,7 +639,13 @@ void MainWindow::onSettings()
         m_highlightColor = dialog.highlightColor();
         
         applyFont(m_appFont);
-        m_wordAnalysisWidget->setLanguage(m_language);
+        
+        // Dil değiştiyse translator'ı güncelle
+        if (oldLanguage != m_language) {
+            onLanguageChanged(m_language);
+        } else {
+            m_wordAnalysisWidget->setLanguage(m_language);
+        }
         
         // Reload verses with new settings
         if (!m_searchResults.isEmpty()) {
@@ -639,7 +674,7 @@ void MainWindow::onAbout()
             "<li>İniş sırasına göre sıralama</li>"
             "<li>Türkçe ve İngilizce dil desteği</li>"
             "</ul>"
-            "<p>© 2024 Maren Robotics</p>"
+            "<p>© 2024 Türkay Biliyor</p>"
         ).arg(APP_VERSION);
     } else {
         aboutText = QString(
@@ -656,7 +691,7 @@ void MainWindow::onAbout()
             "<li>Sort by revelation order</li>"
             "<li>Turkish and English language support</li>"
             "</ul>"
-            "<p>© 2024 Maren Robotics</p>"
+            "<p>© 2024 Türkay Biliyor</p>"
         ).arg(APP_VERSION);
     }
     
@@ -673,7 +708,6 @@ void MainWindow::onLanguageChanged(const QString &lang)
     m_language = lang;
     m_wordAnalysisWidget->setLanguage(lang);
     
-    // Update verse widgets language
     for (VerseWidget *vw : m_verseWidgets) {
         vw->setLanguage(lang);
     }
@@ -681,8 +715,21 @@ void MainWindow::onLanguageChanged(const QString &lang)
     QSettings settings;
     settings.setValue("language", lang);
     
-    QMessageBox::information(this, tr("Language Changed"),
-        tr("Language will be fully applied after restarting the application."));
+    // Yeni translator yükle
+    static QTranslator *appTranslator = nullptr;
+    
+    if (appTranslator) {
+        qApp->removeTranslator(appTranslator);
+        delete appTranslator;
+    }
+    
+    appTranslator = new QTranslator(qApp);
+    QString translationFile = QString(":/translations/holybooksexplorer_%1.qm").arg(lang);
+    
+    if (appTranslator->load(translationFile)) {
+        qApp->installTranslator(appTranslator);
+        retranslateUi();
+    }
 }
 
 void MainWindow::onExportChapter()
@@ -807,7 +854,52 @@ void MainWindow::applyFont(const QFont &font)
     m_searchEdit->setFont(font);
 }
 
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        retranslateUi();
+    }
+    QMainWindow::changeEvent(event);
+}
+
 void MainWindow::retranslateUi()
 {
     setWindowTitle(tr("Holy Books Explorer"));
+    
+    menuBar()->clear();
+    setupMenuBar();
+    
+    QList<QToolBar*> toolbars = findChildren<QToolBar*>();
+    for (QToolBar *toolbar : toolbars) {
+        removeToolBar(toolbar);
+        delete toolbar;
+    }
+    setupToolBar();
+    
+    if (m_bookLabel) m_bookLabel->setText(tr("📖 Book:"));
+    if (m_chapterLabel) m_chapterLabel->setText(tr("📑 Chapter/Sure:"));
+    if (m_sortLabel) m_sortLabel->setText(tr("🔄 Sort Order:"));
+    if (m_searchLabel) m_searchLabel->setText(tr("🔍 Search:"));
+    
+    if (m_bookCombo) {
+        int currentIndex = m_bookCombo->currentIndex();
+        m_bookCombo->setItemText(0, tr("📗 Quran"));
+        m_bookCombo->setItemText(1, tr("📕 Gospel"));
+        m_bookCombo->setItemText(2, tr("📘 Torah"));
+        m_bookCombo->setItemText(3, tr("📙 Psalms"));
+        m_bookCombo->setCurrentIndex(currentIndex);
+    }
+    
+    if (m_sortCombo) {
+        int currentIndex = m_sortCombo->currentIndex();
+        m_sortCombo->setItemText(0, tr("Default Order"));
+        m_sortCombo->setItemText(1, tr("Verse Length (Shortest First)"));
+        m_sortCombo->setItemText(2, tr("Verse Length (Longest First)"));
+        m_sortCombo->setCurrentIndex(currentIndex);
+    }
+    
+    if (m_searchButton) m_searchButton->setText(tr("🔍 Search"));
+    if (m_clearSearchButton) m_clearSearchButton->setText(tr("✖ Clear"));
+    if (m_searchEdit) m_searchEdit->setPlaceholderText(tr("Enter keyword to search..."));
 }

@@ -32,6 +32,7 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
+    void changeEvent(QEvent *event) override;  // Dil değişikliğini yakala
 
 private slots:
     // Book/Chapter selection
@@ -64,7 +65,7 @@ private:
     void setupConnections();
     void loadSettings();
     void saveSettings();
-    void retranslateUi();
+    void retranslateUi();  // UI'yi yeniden çevir
     void applyDarkTheme();
     
     void loadChapters();
@@ -105,6 +106,12 @@ private:
     
     QLabel *m_statusLabel;
     QLabel *m_statsLabel;
+    
+    // Labels (dinamik çeviri için)
+    QLabel *m_bookLabel;
+    QLabel *m_chapterLabel;
+    QLabel *m_sortLabel;
+    QLabel *m_searchLabel;
     
     // Settings
     QFont m_appFont;
