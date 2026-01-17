@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/holybooksexplorer_tr.qm</file>
+        <file>translations/holybooksexplorer_en.qm</file>
+    </qresource>
+    <qresource prefix="/data">
+        <file>Kutsal_Kitaplar.db</file>
+    </qresource>
+</RCC>
