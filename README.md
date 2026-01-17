@@ -137,4 +137,4 @@ HolyBooksExplorer/
 
 **Note:** This application is intended for educational and research purposes. The holy texts are presented for study and should be treated with respect.
 
-© 2024 Maren Robotics
+© 2026 Türkay Biliyor
