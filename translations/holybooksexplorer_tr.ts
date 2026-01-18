@@ -56,6 +56,10 @@
         <translation>İniş Sırası</translation>
     </message>
     <message>
+        <source>Scientific Verses</source>
+        <translation>Bilimsel Ayetler</translation>
+    </message>
+    <message>
         <source>Verse Length (Shortest First)</source>
         <translation>Ayet Uzunluğu (En Kısa Önce)</translation>
     </message>
@@ -154,6 +158,10 @@
     <message>
         <source>Database loaded successfully</source>
         <translation>Veritabanı başarıyla yüklendi</translation>
+    </message>
+    <message>
+        <source>Failed to copy database from resources</source>
+        <translation>Veritabanı kaynaklardan kopyalanamadı</translation>
     </message>
     <message>
         <source>Please open a database file (File → Open Database)</source>

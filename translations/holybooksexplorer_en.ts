@@ -28,6 +28,10 @@
         <translation>Revelation Order</translation>
     </message>
     <message>
+        <source>Scientific Verses</source>
+        <translation>Scientific Verses</translation>
+    </message>
+    <message>
         <source>Verse Length (Shortest First)</source>
         <translation>Verse Length (Shortest First)</translation>
     </message>
@@ -106,6 +110,10 @@
     <message>
         <source>Database loaded successfully</source>
         <translation>Database loaded successfully</translation>
+    </message>
+    <message>
+        <source>Failed to copy database from resources</source>
+        <translation>Failed to copy database from resources</translation>
     </message>
     <message>
         <source>Search cleared</source>

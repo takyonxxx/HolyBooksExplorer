@@ -145,6 +145,27 @@ QList<Chapter> DatabaseManager::getChaptersByRevelationOrder(BookType bookType) 
     return chapters;
 }
 
+QList<Chapter> DatabaseManager::getChaptersByScientificContent(BookType bookType) const
+{
+    QList<Chapter> chapters;
+    if (!m_db.isOpen() || bookType != Quran) return getChapters(bookType);
+
+    QSqlQuery query(m_db);
+    query.prepare("SELECT sureno, sure, sureadi FROM tbl_kuran_sureler WHERE bilimsel=1 ORDER BY sureno");
+
+    if (query.exec()) {
+        while (query.next()) {
+            Chapter ch;
+            ch.no = query.value(0).toInt();
+            ch.name = query.value(1).toString().trimmed();
+            ch.displayName = query.value(2).toString().trimmed();
+            chapters.append(ch);
+        }
+    }
+
+    return chapters;
+}
+
 QList<Verse> DatabaseManager::getVerses(BookType bookType, int chapterNo, const QString &bookName) const
 {
     QList<Verse> verses;

@@ -36,16 +36,27 @@ MainWindow::MainWindow(QWidget *parent)
     applyDarkTheme();
     loadSettings();
     
-    // Try to load default database
+    // Always copy database from resources to ensure latest version
     QString defaultPath = QCoreApplication::applicationDirPath() + "/Kutsal_Kitaplar.db";
+    QString resourcePath = ":/data/Kutsal_Kitaplar.db";
+    
+    // Remove old database if exists
     if (QFile::exists(defaultPath)) {
+        QFile::remove(defaultPath);
+    }
+    
+    // Copy from resources
+    if (QFile::copy(resourcePath, defaultPath)) {
+        // Set file permissions to read/write
+        QFile::setPermissions(defaultPath, QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::ReadOther);
+        
         m_databasePath = defaultPath;
         if (m_dbManager->openDatabase(defaultPath)) {
             loadChapters();
             m_statusLabel->setText(tr("Database loaded successfully"));
         }
     } else {
-        m_statusLabel->setText(tr("Please open a database file (File → Open Database)"));
+        m_statusLabel->setText(tr("Failed to copy database from resources"));
     }
 }
 
@@ -238,6 +249,7 @@ void MainWindow::setupUi()
     m_sortCombo = new QComboBox(leftPanel);
     m_sortCombo->addItem(tr("Default Order"), "number");
     m_sortCombo->addItem(tr("Revelation Order"), "revelation");
+    m_sortCombo->addItem(tr("Scientific Verses"), "scientific");
     m_sortCombo->addItem(tr("Verse Length (Shortest First)"), "short");
     m_sortCombo->addItem(tr("Verse Length (Longest First)"), "long");
     leftLayout->addWidget(m_sortCombo);
@@ -482,9 +494,12 @@ void MainWindow::loadChapters()
     m_chapterCombo->clear();
     
     QList<Chapter> chapters;
+    QString sortType = m_sortCombo->currentData().toString();
     
-    if (m_currentBook == DatabaseManager::Quran && m_sortCombo->currentData().toString() == "revelation") {
+    if (m_currentBook == DatabaseManager::Quran && sortType == "revelation") {
         chapters = m_dbManager->getChaptersByRevelationOrder(m_currentBook);
+    } else if (m_currentBook == DatabaseManager::Quran && sortType == "scientific") {
+        chapters = m_dbManager->getChaptersByScientificContent(m_currentBook);
     } else {
         chapters = m_dbManager->getChapters(m_currentBook);
     }
@@ -493,7 +508,7 @@ void MainWindow::loadChapters()
         QString displayText;
         if (m_currentBook == DatabaseManager::Injil) {
             displayText = QString("%1 - %2").arg(ch.bookName).arg(ch.displayName);
-        } else if (m_currentBook == DatabaseManager::Quran && m_sortCombo->currentData().toString() == "revelation") {
+        } else if (m_currentBook == DatabaseManager::Quran && sortType == "revelation") {
             displayText = QString("%1. %2 (Sıra: %3)").arg(ch.revelationOrder).arg(ch.name).arg(ch.no);
         } else {
             displayText = ch.displayName;
@@ -896,8 +911,9 @@ void MainWindow::retranslateUi()
         int currentIndex = m_sortCombo->currentIndex();
         m_sortCombo->setItemText(0, tr("Default Order"));
         m_sortCombo->setItemText(1, tr("Revelation Order"));
-        m_sortCombo->setItemText(2, tr("Verse Length (Shortest First)"));
-        m_sortCombo->setItemText(3, tr("Verse Length (Longest First)"));
+        m_sortCombo->setItemText(2, tr("Scientific Verses"));
+        m_sortCombo->setItemText(3, tr("Verse Length (Shortest First)"));
+        m_sortCombo->setItemText(4, tr("Verse Length (Longest First)"));
         m_sortCombo->setCurrentIndex(currentIndex);
     }
     

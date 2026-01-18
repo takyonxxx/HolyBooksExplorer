@@ -66,6 +66,7 @@ public:
     // Chapter operations
     QList<Chapter> getChapters(BookType bookType) const;
     QList<Chapter> getChaptersByRevelationOrder(BookType bookType) const;
+    QList<Chapter> getChaptersByScientificContent(BookType bookType) const;
     
     // Verse operations
     QList<Verse> getVerses(BookType bookType, int chapterNo, const QString &bookName = QString()) const;
