@@ -237,6 +237,7 @@ void MainWindow::setupUi()
     
     m_sortCombo = new QComboBox(leftPanel);
     m_sortCombo->addItem(tr("Default Order"), "number");
+    m_sortCombo->addItem(tr("Revelation Order"), "revelation");
     m_sortCombo->addItem(tr("Verse Length (Shortest First)"), "short");
     m_sortCombo->addItem(tr("Verse Length (Longest First)"), "long");
     leftLayout->addWidget(m_sortCombo);
@@ -894,8 +895,9 @@ void MainWindow::retranslateUi()
     if (m_sortCombo) {
         int currentIndex = m_sortCombo->currentIndex();
         m_sortCombo->setItemText(0, tr("Default Order"));
-        m_sortCombo->setItemText(1, tr("Verse Length (Shortest First)"));
-        m_sortCombo->setItemText(2, tr("Verse Length (Longest First)"));
+        m_sortCombo->setItemText(1, tr("Revelation Order"));
+        m_sortCombo->setItemText(2, tr("Verse Length (Shortest First)"));
+        m_sortCombo->setItemText(3, tr("Verse Length (Longest First)"));
         m_sortCombo->setCurrentIndex(currentIndex);
     }
     

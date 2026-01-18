@@ -20,6 +20,22 @@
         <translation>Sort Order:</translation>
     </message>
     <message>
+        <source>Default Order</source>
+        <translation>Default Order</translation>
+    </message>
+    <message>
+        <source>Revelation Order</source>
+        <translation>Revelation Order</translation>
+    </message>
+    <message>
+        <source>Verse Length (Shortest First)</source>
+        <translation>Verse Length (Shortest First)</translation>
+    </message>
+    <message>
+        <source>Verse Length (Longest First)</source>
+        <translation>Verse Length (Longest First)</translation>
+    </message>
+    <message>
         <source>By Sura Number</source>
         <translation>By Sura Number</translation>
     </message>

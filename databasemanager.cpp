@@ -123,7 +123,13 @@ QList<Chapter> DatabaseManager::getChaptersByRevelationOrder(BookType bookType) 
     if (!m_db.isOpen() || bookType != Quran) return getChapters(bookType);
 
     QSqlQuery query(m_db);
-    query.prepare("SELECT sureno, sure, sureadi, sureinisno, sureinis, sureinisadi FROM tbl_kuran_sureler ORDER BY sureinisno");
+    // s1: İniş sırası indeksi, s2: Gerçek sure bilgileri
+    query.prepare(
+        "SELECT s2.sureno, s2.sure, s2.sureadi, s1.sureno as revelation_order "
+        "FROM tbl_kuran_sureler s1 "
+        "JOIN tbl_kuran_sureler s2 ON s1.sureinisno = s2.sureno "
+        "ORDER BY s1.sureno"
+    );
 
     if (query.exec()) {
         while (query.next()) {
@@ -131,8 +137,7 @@ QList<Chapter> DatabaseManager::getChaptersByRevelationOrder(BookType bookType) 
             ch.no = query.value(0).toInt();
             ch.name = query.value(1).toString().trimmed();
             ch.displayName = query.value(2).toString().trimmed();
-            ch.revelationOrder = query.value(3).toInt();
-            ch.revelationName = query.value(5).toString().trimmed();
+            ch.revelationOrder = query.value(3).toInt(); // İniş sırası
             chapters.append(ch);
         }
     }

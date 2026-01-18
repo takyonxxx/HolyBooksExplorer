@@ -52,6 +52,10 @@
         <translation>Varsayılan Sıra</translation>
     </message>
     <message>
+        <source>Revelation Order</source>
+        <translation>İniş Sırası</translation>
+    </message>
+    <message>
         <source>Verse Length (Shortest First)</source>
         <translation>Ayet Uzunluğu (En Kısa Önce)</translation>
     </message>
