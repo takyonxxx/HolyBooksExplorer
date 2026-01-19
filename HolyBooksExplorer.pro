@@ -1,4 +1,4 @@
-QT       += core gui widgets sql
+QT       += core gui widgets sql network
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += core5compat
 
@@ -19,7 +19,8 @@ SOURCES += \
     settingsdialog.cpp \
     searchhighlighter.cpp \
     versewidget.cpp \
-    wordanalysiswidget.cpp
+    wordanalysiswidget.cpp \
+    translationworker.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -27,7 +28,8 @@ HEADERS += \
     settingsdialog.h \
     searchhighlighter.h \
     versewidget.h \
-    wordanalysiswidget.h
+    wordanalysiswidget.h \
+    translationworker.h
 
 FORMS += \
     mainwindow.ui \
@@ -55,3 +57,5 @@ win32 {
 macx {
     ICON = icons/app.icns
 }
+
+#C:\Qt\6.10.0\msvc2022_64\bin\windeployqt.exe C:\Users\MSI\Desktop\HolyBooksExplorerExe\HolyBooksExplorer.exe
