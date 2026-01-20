@@ -193,6 +193,9 @@ void SettingsDialog::loadSurahList()
 {
     m_surahCombo->clear();
     
+    // Add "All Surahs" option
+    m_surahCombo->addItem(tr("All Surahs (1-114)"), -1);
+    
     // Find an open database connection
     QSqlDatabase db;
     QStringList connections = QSqlDatabase::connectionNames();

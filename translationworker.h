@@ -23,7 +23,7 @@ public:
 
     void setApiKey(const QString &apiKey);
     void setDatabase(const QString &dbPath);
-    void startTranslation(int sureNo, TranslationType type);
+    void startTranslation(int sureNo, TranslationType type);  // sureNo=-1 means all surahs
     void cancelTranslation();
     
     bool isRunning() const { return m_running; }
@@ -42,6 +42,7 @@ private:
     void translateMeal(int sureNo);
     void translateWord(int sureNo);
     void sendTranslationRequest(const QString &text, int recordId);
+    void processNextSure();
     
     QNetworkAccessManager *m_networkManager;
     QString m_apiKey;
@@ -51,6 +52,10 @@ private:
     bool m_cancelled;
     TranslationType m_currentType;
     int m_currentSureNo;
+    
+    // For processing multiple surahs
+    QList<int> m_sureList;
+    int m_currentSureIndex;
     
     // Queue for batch processing
     struct TranslationItem {

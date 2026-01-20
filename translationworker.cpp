@@ -16,6 +16,7 @@ TranslationWorker::TranslationWorker(QObject *parent)
     , m_cancelled(false)
     , m_currentIndex(0)
     , m_totalItems(0)
+    , m_currentSureIndex(0)
     , m_processTimer(new QTimer(this))
 {
     connect(m_networkManager, &QNetworkAccessManager::finished,
@@ -65,15 +66,29 @@ void TranslationWorker::startTranslation(int sureNo, TranslationType type)
     
     m_running = true;
     m_cancelled = false;
-    m_currentSureNo = sureNo;
     m_currentType = type;
     m_currentIndex = 0;
     m_queue.clear();
+    m_sureList.clear();
+    m_currentSureIndex = 0;
     
-    if (type == TranslateMeal) {
-        translateMeal(sureNo);
+    // If sureNo is -1, process all surahs (1-114)
+    if (sureNo == -1) {
+        for (int i = 1; i <= 114; i++) {
+            m_sureList.append(i);
+        }
+        emit logMessage(tr("Starting translation for all surahs (1-114)"));
+        processNextSure();
     } else {
-        translateWord(sureNo);
+        // Process single surah
+        m_currentSureNo = sureNo;
+        m_sureList.append(sureNo);
+        
+        if (type == TranslateMeal) {
+            translateMeal(sureNo);
+        } else {
+            translateWord(sureNo);
+        }
     }
 }
 
@@ -83,6 +98,33 @@ void TranslationWorker::cancelTranslation()
     m_running = false;
     m_processTimer->stop();
     emit logMessage(tr("Translation cancelled"));
+}
+
+void TranslationWorker::processNextSure()
+{
+    if (m_cancelled || m_currentSureIndex >= m_sureList.size()) {
+        m_running = false;
+        if (!m_cancelled) {
+            emit logMessage(tr("All surahs translation completed!"));
+            emit translationComplete();
+        }
+        return;
+    }
+    
+    m_currentSureNo = m_sureList[m_currentSureIndex];
+    m_queue.clear();
+    m_currentIndex = 0;
+    
+    emit logMessage(tr("Processing Surah %1 of %2 (Surah #%3)")
+                    .arg(m_currentSureIndex + 1)
+                    .arg(m_sureList.size())
+                    .arg(m_currentSureNo));
+    
+    if (m_currentType == TranslateMeal) {
+        translateMeal(m_currentSureNo);
+    } else {
+        translateWord(m_currentSureNo);
+    }
 }
 
 void TranslationWorker::translateMeal(int sureNo)
@@ -131,9 +173,16 @@ void TranslationWorker::translateMeal(int sureNo)
     m_totalItems = m_queue.size();
     
     if (m_totalItems == 0) {
-        emit logMessage(tr("No items to translate for Surah %1").arg(sureNo));
-        m_running = false;
-        emit translationComplete();
+        emit logMessage(tr("No items to translate for Surah %1 (already translated)").arg(sureNo));
+        
+        // Move to next surah if processing all
+        if (m_sureList.size() > 1) {
+            m_currentSureIndex++;
+            QTimer::singleShot(100, this, &TranslationWorker::processNextSure);
+        } else {
+            m_running = false;
+            emit translationComplete();
+        }
         return;
     }
     
@@ -190,9 +239,16 @@ void TranslationWorker::translateWord(int sureNo)
     m_totalItems = m_queue.size();
     
     if (m_totalItems == 0) {
-        emit logMessage(tr("No items to translate for Surah %1").arg(sureNo));
-        m_running = false;
-        emit translationComplete();
+        emit logMessage(tr("No items to translate for Surah %1 (already translated)").arg(sureNo));
+        
+        // Move to next surah if processing all
+        if (m_sureList.size() > 1) {
+            m_currentSureIndex++;
+            QTimer::singleShot(100, this, &TranslationWorker::processNextSure);
+        } else {
+            m_running = false;
+            emit translationComplete();
+        }
         return;
     }
     
@@ -206,10 +262,20 @@ void TranslationWorker::translateWord(int sureNo)
 void TranslationWorker::processNextItem()
 {
     if (m_cancelled || m_currentIndex >= m_queue.size()) {
-        m_running = false;
+        // Current surah is complete
         if (!m_cancelled) {
-            emit logMessage(tr("Translation completed for Surah %1").arg(m_currentSureNo));
-            emit translationComplete();
+            emit logMessage(tr("Surah %1 translation completed").arg(m_currentSureNo));
+            
+            // Move to next surah if processing multiple surahs
+            if (m_sureList.size() > 1) {
+                m_currentSureIndex++;
+                QTimer::singleShot(1000, this, &TranslationWorker::processNextSure);
+            } else {
+                m_running = false;
+                emit translationComplete();
+            }
+        } else {
+            m_running = false;
         }
         return;
     }
