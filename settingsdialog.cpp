@@ -363,12 +363,7 @@ void SettingsDialog::loadSurahList()
 void SettingsDialog::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
-    
-    static bool firstShow = true;
-    if (firstShow) {
-        firstShow = false;
-        loadSurahList();
-    }
+    loadSurahList();
 }
 
 void SettingsDialog::loadSettings()
