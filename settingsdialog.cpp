@@ -22,6 +22,22 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     , m_showArabic(true)
     , m_showLatin(true)
     , m_highlightColor(Qt::yellow)
+    , m_translationGroup(nullptr)
+    , m_serviceLabel(nullptr)
+    , m_serviceCombo(nullptr)
+    , m_apiLabel(nullptr)
+    , m_apiKeyEdit(nullptr)
+    , m_surahLabel(nullptr)
+    , m_surahCombo(nullptr)
+    , m_typeLabel(nullptr)
+    , m_mealRadio(nullptr)
+    , m_wordRadio(nullptr)
+    , m_startButton(nullptr)
+    , m_cancelButton(nullptr)
+    , m_progressBar(nullptr)
+    , m_logLabel(nullptr)
+    , m_logEdit(nullptr)
+    , m_infoLabel(nullptr)
     , m_translationWorker(nullptr)
     , m_googleTranslateWorker(nullptr)
 {
@@ -46,7 +62,6 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::setupUi()
 {
-    setWindowTitle(tr("Settings"));
     setMinimumSize(500, 700);
     resize(520, 780);
     
@@ -76,53 +91,51 @@ void SettingsDialog::setupUi()
 void SettingsDialog::setupTranslationUi()
 {
     // Create translation group box
-    m_translationGroup = new QGroupBox(tr("Translation Tool"), this);
+    m_translationGroup = new QGroupBox(this);
     
     QVBoxLayout *groupLayout = new QVBoxLayout(m_translationGroup);
     groupLayout->setSpacing(8);
     
     // Translation service selection
     QHBoxLayout *serviceLayout = new QHBoxLayout();
-    QLabel *serviceLabel = new QLabel(tr("Service:"), this);
-    serviceLabel->setFixedWidth(100);
+    m_serviceLabel = new QLabel(this);
+    m_serviceLabel->setFixedWidth(100);
     m_serviceCombo = new QComboBox(this);
-    m_serviceCombo->addItem(tr("Google Translate (Free)"), "google");
-    m_serviceCombo->addItem(tr("Claude API (Requires Key)"), "claude");
-    m_serviceCombo->setToolTip(tr("Google Translate: Free but limited rate\nClaude API: Higher quality but requires API key"));
-    serviceLayout->addWidget(serviceLabel);
+    m_serviceCombo->addItem("", "google");  // Will be set in retranslateUi
+    m_serviceCombo->addItem("", "claude");  // Will be set in retranslateUi
+    serviceLayout->addWidget(m_serviceLabel);
     serviceLayout->addWidget(m_serviceCombo);
     groupLayout->addLayout(serviceLayout);
     
     // API Key (sadece Claude için görünür)
     QHBoxLayout *apiLayout = new QHBoxLayout();
-    QLabel *apiLabel = new QLabel(tr("API Key:"), this);
-    apiLabel->setFixedWidth(100);
+    m_apiLabel = new QLabel(this);
+    m_apiLabel->setFixedWidth(100);
     m_apiKeyEdit = new QLineEdit(this);
     m_apiKeyEdit->setEchoMode(QLineEdit::Password);
-    m_apiKeyEdit->setPlaceholderText(tr("Required for Claude API"));
     m_apiKeyEdit->setEnabled(false); // Başlangıçta disabled
-    apiLayout->addWidget(apiLabel);
+    apiLayout->addWidget(m_apiLabel);
     apiLayout->addWidget(m_apiKeyEdit);
     groupLayout->addLayout(apiLayout);
     
     // Surah selection
     QHBoxLayout *surahLayout = new QHBoxLayout();
-    QLabel *surahLabel = new QLabel(tr("Select Surah:"), this);
-    surahLabel->setFixedWidth(100);
+    m_surahLabel = new QLabel(this);
+    m_surahLabel->setFixedWidth(100);
     m_surahCombo = new QComboBox(this);
     m_surahCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    surahLayout->addWidget(surahLabel);
+    surahLayout->addWidget(m_surahLabel);
     surahLayout->addWidget(m_surahCombo);
     groupLayout->addLayout(surahLayout);
     
     // Translation type
     QHBoxLayout *typeLayout = new QHBoxLayout();
-    QLabel *typeLabel = new QLabel(tr("Type:"), this);
-    typeLabel->setFixedWidth(100);
-    m_mealRadio = new QRadioButton(tr("Verses (meal)"), this);
-    m_wordRadio = new QRadioButton(tr("Words (kelime)"), this);
+    m_typeLabel = new QLabel(this);
+    m_typeLabel->setFixedWidth(100);
+    m_mealRadio = new QRadioButton(this);
+    m_wordRadio = new QRadioButton(this);
     m_mealRadio->setChecked(true);
-    typeLayout->addWidget(typeLabel);
+    typeLayout->addWidget(m_typeLabel);
     typeLayout->addWidget(m_mealRadio);
     typeLayout->addWidget(m_wordRadio);
     typeLayout->addStretch();
@@ -130,8 +143,8 @@ void SettingsDialog::setupTranslationUi()
     
     // Buttons
     QHBoxLayout *buttonLayout = new QHBoxLayout();
-    m_startButton = new QPushButton(tr("Start Translation"), this);
-    m_cancelButton = new QPushButton(tr("Cancel"), this);
+    m_startButton = new QPushButton(this);
+    m_cancelButton = new QPushButton(this);
     m_cancelButton->setEnabled(false);
     
     // Style buttons
@@ -154,8 +167,8 @@ void SettingsDialog::setupTranslationUi()
     groupLayout->addWidget(m_progressBar);
     
     // Log area
-    QLabel *logLabel = new QLabel(tr("Log:"), this);
-    groupLayout->addWidget(logLabel);
+    m_logLabel = new QLabel(this);
+    groupLayout->addWidget(m_logLabel);
     
     m_logEdit = new QTextEdit(this);
     m_logEdit->setReadOnly(true);
@@ -164,11 +177,10 @@ void SettingsDialog::setupTranslationUi()
     groupLayout->addWidget(m_logEdit);
     
     // Info label for Google Translate
-    QLabel *infoLabel = new QLabel(tr("<i>Google Translate: ~15 requests/min, free but may be blocked by Google<br>"
-                                     "Claude API: Higher quality, requires API key from anthropic.com</i>"), this);
-    infoLabel->setWordWrap(true);
-    infoLabel->setStyleSheet("QLabel { color: #666; font-size: 8pt; }");
-    groupLayout->addWidget(infoLabel);
+    m_infoLabel = new QLabel(this);
+    m_infoLabel->setWordWrap(true);
+    m_infoLabel->setStyleSheet("QLabel { color: #666; font-size: 8pt; }");
+    groupLayout->addWidget(m_infoLabel);
     
     // Get the main layout and insert translation group before spacer
     QVBoxLayout *mainLayout = qobject_cast<QVBoxLayout*>(layout());
@@ -221,6 +233,9 @@ void SettingsDialog::setupTranslationUi()
             this, &SettingsDialog::onTranslationError);
     connect(m_googleTranslateWorker, &GoogleTranslateWorker::logMessage, 
             this, &SettingsDialog::onTranslationLog);
+    
+    // Initialize all text after UI is created
+    retranslateUi();
 }
 
 void SettingsDialog::onTranslationServiceChanged()
@@ -494,5 +509,76 @@ void SettingsDialog::onHighlightColorClicked()
     QColor color = QColorDialog::getColor(m_highlightColor, this, tr("Select Highlight Color"));
     if (color.isValid()) {
         m_highlightColor = color;
+    }
+}
+
+void SettingsDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+        retranslateUi();
+    }
+    QDialog::changeEvent(event);
+}
+
+void SettingsDialog::retranslateUi()
+{
+    setWindowTitle(tr("Settings"));
+    
+    if (m_translationGroup) {
+        m_translationGroup->setTitle(tr("Translation Tool"));
+    }
+    
+    if (m_serviceLabel) {
+        m_serviceLabel->setText(tr("Service:"));
+    }
+    
+    if (m_serviceCombo && m_serviceCombo->count() == 2) {
+        int currentIndex = m_serviceCombo->currentIndex();
+        m_serviceCombo->setItemText(0, tr("Google Translate (Free)"));
+        m_serviceCombo->setItemText(1, tr("Claude API (Requires Key)"));
+        m_serviceCombo->setToolTip(tr("Google Translate: Free but limited rate\nClaude API: Higher quality but requires API key"));
+        m_serviceCombo->setCurrentIndex(currentIndex);
+    }
+    
+    if (m_apiLabel) {
+        m_apiLabel->setText(tr("API Key:"));
+    }
+    
+    if (m_apiKeyEdit) {
+        m_apiKeyEdit->setPlaceholderText(tr("Required for Claude API"));
+    }
+    
+    if (m_surahLabel) {
+        m_surahLabel->setText(tr("Select Surah:"));
+    }
+    
+    if (m_typeLabel) {
+        m_typeLabel->setText(tr("Type:"));
+    }
+    
+    if (m_mealRadio) {
+        m_mealRadio->setText(tr("Verses (meal)"));
+    }
+    
+    if (m_wordRadio) {
+        m_wordRadio->setText(tr("Words (kelime)"));
+    }
+    
+    if (m_startButton) {
+        m_startButton->setText(tr("Start Translation"));
+    }
+    
+    if (m_cancelButton) {
+        m_cancelButton->setText(tr("Cancel"));
+    }
+    
+    if (m_logLabel) {
+        m_logLabel->setText(tr("Log:"));
+    }
+    
+    if (m_infoLabel) {
+        m_infoLabel->setText(tr("<i>Google Translate: ~15 requests/min, free but may be blocked by Google<br>"
+                                "Claude API: Higher quality, requires API key from anthropic.com</i>"));
     }
 }

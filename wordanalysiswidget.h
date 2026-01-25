@@ -20,12 +20,17 @@ public:
     void clear();
     void setFont(const QFont &font);
 
+protected:
+    void changeEvent(QEvent *event) override;
+    
 private:
     void updateDisplay();
+    void retranslateUi();
     
     QScrollArea *m_scrollArea;
     QWidget *m_contentWidget;
     QVBoxLayout *m_layout;
+    QLabel *m_titleLabel;
     
     QList<WordMeaning> m_meanings;
     QString m_language;

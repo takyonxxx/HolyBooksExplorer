@@ -135,6 +135,16 @@
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
+    <message>
+        <source>📊 Statistics:
+• Total Chapters: %1
+• Total Verses: %2
+• This Chapter: %3 verses</source>
+        <translation>📊 Statistics:
+• Total Chapters: %1
+• Total Verses: %2
+• This Chapter: %3 verses</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
@@ -143,8 +153,134 @@
         <translation>Settings</translation>
     </message>
     <message>
+        <source>Font Settings</source>
+        <translation>Font Settings</translation>
+    </message>
+    <message>
+        <source>Font Family:</source>
+        <translation>Font Family:</translation>
+    </message>
+    <message>
+        <source>Font Size:</source>
+        <translation>Font Size:</translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation>Language</translation>
+    </message>
+    <message>
+        <source>Interface Language:</source>
+        <translation>Interface Language:</translation>
+    </message>
+    <message>
+        <source>Display Options</source>
+        <translation>Display Options</translation>
+    </message>
+    <message>
+        <source>Show Arabic Text</source>
+        <translation>Show Arabic Text</translation>
+    </message>
+    <message>
+        <source>Show Latin Transliteration</source>
+        <translation>Show Latin Transliteration</translation>
+    </message>
+    <message>
+        <source>Highlight Color:</source>
+        <translation>Highlight Color:</translation>
+    </message>
+    <message>
         <source>Select Highlight Color</source>
         <translation>Select Highlight Color</translation>
+    </message>
+    <message>
+        <source>Translation Tool</source>
+        <translation>Translation Tool</translation>
+    </message>
+    <message>
+        <source>Service:</source>
+        <translation>Service:</translation>
+    </message>
+    <message>
+        <source>Google Translate (Free)</source>
+        <translation>Google Translate (Free)</translation>
+    </message>
+    <message>
+        <source>Claude API (Requires Key)</source>
+        <translation>Claude API (Requires Key)</translation>
+    </message>
+    <message>
+        <source>Google Translate: Free but limited rate
+Claude API: Higher quality but requires API key</source>
+        <translation>Google Translate: Free but limited rate
+Claude API: Higher quality but requires API key</translation>
+    </message>
+    <message>
+        <source>API Key:</source>
+        <translation>API Key:</translation>
+    </message>
+    <message>
+        <source>Required for Claude API</source>
+        <translation>Required for Claude API</translation>
+    </message>
+    <message>
+        <source>Select Surah:</source>
+        <translation>Select Surah:</translation>
+    </message>
+    <message>
+        <source>Type:</source>
+        <translation>Type:</translation>
+    </message>
+    <message>
+        <source>Verses (meal)</source>
+        <translation>Verses (meal)</translation>
+    </message>
+    <message>
+        <source>Words (kelime)</source>
+        <translation>Words (kelime)</translation>
+    </message>
+    <message>
+        <source>Start Translation</source>
+        <translation>Start Translation</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <source>Log:</source>
+        <translation>Log:</translation>
+    </message>
+    <message>
+        <source>&lt;i&gt;Google Translate: ~15 requests/min, free but may be blocked by Google&lt;br&gt;Claude API: Higher quality, requires API key from anthropic.com&lt;/i&gt;</source>
+        <translation>&lt;i&gt;Google Translate: ~15 requests/min, free but may be blocked by Google&lt;br&gt;Claude API: Higher quality, requires API key from anthropic.com&lt;/i&gt;</translation>
+    </message>
+    <message>
+        <source>[INFO] Using Google Translate (free, ~15 requests/min)</source>
+        <translation>[INFO] Using Google Translate (free, ~15 requests/min)</translation>
+    </message>
+    <message>
+        <source>[INFO] Using Claude API (higher quality, requires API key)</source>
+        <translation>[INFO] Using Claude API (higher quality, requires API key)</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <source>Please enter your API Key</source>
+        <translation>Please enter your API Key</translation>
+    </message>
+    <message>
+        <source>Please select a Surah</source>
+        <translation>Please select a Surah</translation>
+    </message>
+    <message>
+        <source>Complete</source>
+        <translation>Complete</translation>
+    </message>
+    <message>
+        <source>Translation completed successfully!</source>
+        <translation>Translation completed successfully!</translation>
     </message>
 </context>
 <context>

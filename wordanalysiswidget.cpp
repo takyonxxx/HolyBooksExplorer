@@ -1,19 +1,21 @@
 #include "wordanalysiswidget.h"
 #include <QLabel>
 #include <QFrame>
+#include <QEvent>
 
 WordAnalysisWidget::WordAnalysisWidget(QWidget *parent)
     : QWidget(parent)
     , m_language("tr")
+    , m_titleLabel(nullptr)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
     
     // Title
-    QLabel *titleLabel = new QLabel(tr("Word Analysis"), this);
-    titleLabel->setStyleSheet("QLabel { background-color: #192841; color: #DCE6F5; padding: 8px; font-weight: bold; }");
-    mainLayout->addWidget(titleLabel);
+    m_titleLabel = new QLabel(this);
+    m_titleLabel->setStyleSheet("QLabel { background-color: #192841; color: #DCE6F5; padding: 8px; font-weight: bold; font-size: 16px; }");
+    mainLayout->addWidget(m_titleLabel);
     
     // Scroll area
     m_scrollArea = new QScrollArea(this);
@@ -32,6 +34,8 @@ WordAnalysisWidget::WordAnalysisWidget(QWidget *parent)
     mainLayout->addWidget(m_scrollArea);
     
     setStyleSheet("WordAnalysisWidget { background-color: #0F192D; }");
+    
+    retranslateUi();
 }
 
 void WordAnalysisWidget::setWordMeanings(const QList<WordMeaning> &meanings)
@@ -77,7 +81,7 @@ void WordAnalysisWidget::updateDisplay()
         return;
     }
     
-    // Display word meanings
+    // Display word meanings - always show both Turkish and English
     for (const WordMeaning &meaning : m_meanings) {
         QFrame *wordFrame = new QFrame(this);
         wordFrame->setStyleSheet("QFrame { background-color: #192841; border-radius: 4px; padding: 8px; }");
@@ -99,9 +103,9 @@ void WordAnalysisWidget::updateDisplay()
             wordLayout->addWidget(latinLabel);
         }
         
-        // Turkish meaning
+        // Turkish meaning - always show with "Türkçe:" label
         if (!meaning.turkish.isEmpty()) {
-            QLabel *turkishLabel = new QLabel(tr("Turkish: %1").arg(meaning.turkish), wordFrame);
+            QLabel *turkishLabel = new QLabel(QString("Türkçe: %1").arg(meaning.turkish), wordFrame);
             turkishLabel->setStyleSheet("QLabel { color: #DCE6F5; }");
             turkishLabel->setWordWrap(true);
             if (m_currentFont.pointSize() > 0) {
@@ -110,9 +114,9 @@ void WordAnalysisWidget::updateDisplay()
             wordLayout->addWidget(turkishLabel);
         }
         
-        // English meaning
+        // English meaning - always show with "English:" label
         if (!meaning.english.isEmpty()) {
-            QLabel *englishLabel = new QLabel(tr("English: %1").arg(meaning.english), wordFrame);
+            QLabel *englishLabel = new QLabel(QString("English: %1").arg(meaning.english), wordFrame);
             englishLabel->setStyleSheet("QLabel { color: #A0C0FF; }");
             englishLabel->setWordWrap(true);
             if (m_currentFont.pointSize() > 0) {
@@ -122,5 +126,20 @@ void WordAnalysisWidget::updateDisplay()
         }
         
         m_layout->insertWidget(m_layout->count() - 1, wordFrame);
+    }
+}
+
+void WordAnalysisWidget::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        retranslateUi();
+    }
+    QWidget::changeEvent(event);
+}
+
+void WordAnalysisWidget::retranslateUi()
+{
+    if (m_titleLabel) {
+        m_titleLabel->setText(tr("Word Meanings"));
     }
 }

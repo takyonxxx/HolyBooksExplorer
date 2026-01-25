@@ -840,22 +840,12 @@ void MainWindow::updateStatistics()
     int totalVerses = m_dbManager->getVerseCount(m_currentBook);
     int chapterVerses = m_dbManager->getVerseCount(m_currentBook, m_currentChapter);
     
-    QString stats;
-    if (m_language == "tr") {
-        stats = QString(
-            "📊 İstatistikler:\n"
-            "• Toplam Bölüm: %1\n"
-            "• Toplam Ayet: %2\n"
-            "• Bu Bölümde: %3 ayet"
-        ).arg(totalChapters).arg(totalVerses).arg(chapterVerses);
-    } else {
-        stats = QString(
-            "📊 Statistics:\n"
-            "• Total Chapters: %1\n"
-            "• Total Verses: %2\n"
-            "• This Chapter: %3 verses"
-        ).arg(totalChapters).arg(totalVerses).arg(chapterVerses);
-    }
+    QString stats = QString(
+        tr("📊 Statistics:\n"
+           "• Total Chapters: %1\n"
+           "• Total Verses: %2\n"
+           "• This Chapter: %3 verses")
+    ).arg(totalChapters).arg(totalVerses).arg(chapterVerses);
     
     m_statsLabel->setText(stats);
 }
@@ -922,4 +912,7 @@ void MainWindow::retranslateUi()
     if (m_searchButton) m_searchButton->setText(tr("🔍 Search"));
     if (m_clearSearchButton) m_clearSearchButton->setText(tr("✖ Clear"));
     if (m_searchEdit) m_searchEdit->setPlaceholderText(tr("Enter keyword to search..."));
+    
+    // Update statistics with new language
+    updateStatistics();
 }

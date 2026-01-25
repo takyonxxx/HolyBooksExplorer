@@ -11,19 +11,19 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Settings / Ayarlar</string>
+   <string>Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="fontGroupBox">
      <property name="title">
-      <string>Font Settings / Yazı Tipi Ayarları</string>
+      <string>Font Settings</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="fontFamilyLabel">
         <property name="text">
-         <string>Font Family / Yazı Tipi:</string>
+         <string>Font Family:</string>
         </property>
        </widget>
       </item>
@@ -33,7 +33,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="fontSizeLabel">
         <property name="text">
-         <string>Font Size / Yazı Boyutu:</string>
+         <string>Font Size:</string>
         </property>
        </widget>
       </item>
@@ -59,13 +59,13 @@
    <item>
     <widget class="QGroupBox" name="languageGroupBox">
      <property name="title">
-      <string>Language / Dil</string>
+      <string>Language</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="languageLabel">
         <property name="text">
-         <string>Interface Language / Arayüz Dili:</string>
+         <string>Interface Language:</string>
         </property>
        </widget>
       </item>
@@ -78,13 +78,13 @@
    <item>
     <widget class="QGroupBox" name="displayGroupBox">
      <property name="title">
-      <string>Display Options / Görüntüleme Seçenekleri</string>
+      <string>Display Options</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QCheckBox" name="showArabicCheckBox">
         <property name="text">
-         <string>Show Arabic Text / Arapça Metni Göster</string>
+         <string>Show Arabic Text</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -94,7 +94,7 @@
       <item>
        <widget class="QCheckBox" name="showLatinCheckBox">
         <property name="text">
-         <string>Show Latin Transliteration / Latin Harflerini Göster</string>
+         <string>Show Latin Transliteration</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -106,7 +106,7 @@
         <item>
          <widget class="QLabel" name="highlightColorLabel">
           <property name="text">
-           <string>Highlight Color / Vurgulama Rengi:</string>
+           <string>Highlight Color:</string>
           </property>
          </widget>
         </item>

@@ -99,12 +99,8 @@ void VerseWidget::updateDisplay()
     }
     m_headerLabel->setText(header);
     
-    // Set main text based on language
-    QString displayText = m_verse.text;
-    if (m_language == "en" && !m_verse.textEn.isEmpty()) {
-        displayText = m_verse.textEn;
-    }
-    m_textEdit->setPlainText(displayText);
+    // Set main text - always show Turkish text regardless of UI language
+    m_textEdit->setPlainText(m_verse.text);
     
     // Calculate compact height
     QFontMetrics fm(m_textEdit->font());
@@ -112,12 +108,12 @@ void VerseWidget::updateDisplay()
     int textWidth = m_textEdit->width() - 8;
     if (textWidth < 100) textWidth = 400;
     
-    QRect textRect = fm.boundingRect(QRect(0, 0, textWidth, 1000), Qt::TextWordWrap, displayText);
+    QRect textRect = fm.boundingRect(QRect(0, 0, textWidth, 1000), Qt::TextWordWrap, m_verse.text);
     int textHeight = textRect.height() + 4;
     m_textEdit->setFixedHeight(qMax(textHeight, lineHeight + 4));
     
-    // Show English translation if available and language is Turkish
-    if (m_showDetails && !m_verse.textEn.isEmpty() && m_language == "tr") {
+    // Show English translation if available - always show regardless of UI language
+    if (m_showDetails && !m_verse.textEn.isEmpty()) {
         m_textEnEdit->setPlainText(m_verse.textEn);
         m_textEnEdit->show();
         

@@ -215,6 +215,16 @@
         <source>Language will be fully applied after restarting the application.</source>
         <translation>Dil değişikliği uygulamayı yeniden başlattıktan sonra tam olarak uygulanacak.</translation>
     </message>
+    <message>
+        <source>📊 Statistics:
+• Total Chapters: %1
+• Total Verses: %2
+• This Chapter: %3 verses</source>
+        <translation>📊 İstatistikler:
+• Toplam Bölüm: %1
+• Toplam Ayet: %2
+• Bu Bölümde: %3 ayet</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
@@ -223,20 +233,74 @@
         <translation>Ayarlar</translation>
     </message>
     <message>
+        <source>Font Settings</source>
+        <translation>Yazı Tipi Ayarları</translation>
+    </message>
+    <message>
+        <source>Font Family:</source>
+        <translation>Yazı Tipi:</translation>
+    </message>
+    <message>
+        <source>Font Size:</source>
+        <translation>Yazı Boyutu:</translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation>Dil</translation>
+    </message>
+    <message>
+        <source>Interface Language:</source>
+        <translation>Arayüz Dili:</translation>
+    </message>
+    <message>
+        <source>Display Options</source>
+        <translation>Görüntüleme Seçenekleri</translation>
+    </message>
+    <message>
+        <source>Show Arabic Text</source>
+        <translation>Arapça Metni Göster</translation>
+    </message>
+    <message>
+        <source>Show Latin Transliteration</source>
+        <translation>Latin Harflerini Göster</translation>
+    </message>
+    <message>
+        <source>Highlight Color:</source>
+        <translation>Vurgulama Rengi:</translation>
+    </message>
+    <message>
         <source>Select Highlight Color</source>
         <translation>Vurgulama Rengini Seçin</translation>
     </message>
     <message>
-        <source>Translation Tool (Claude API)</source>
-        <translation>Çeviri Aracı (Claude API)</translation>
+        <source>Translation Tool</source>
+        <translation>Çeviri Aracı</translation>
+    </message>
+    <message>
+        <source>Service:</source>
+        <translation>Servis:</translation>
+    </message>
+    <message>
+        <source>Google Translate (Free)</source>
+        <translation>Google Çeviri (Ücretsiz)</translation>
+    </message>
+    <message>
+        <source>Claude API (Requires Key)</source>
+        <translation>Claude API (Anahtar Gerekli)</translation>
+    </message>
+    <message>
+        <source>Google Translate: Free but limited rate
+Claude API: Higher quality but requires API key</source>
+        <translation>Google Çeviri: Ücretsiz ama sınırlı hız
+Claude API: Daha yüksek kalite ama API anahtarı gerekli</translation>
     </message>
     <message>
         <source>API Key:</source>
         <translation>API Anahtarı:</translation>
     </message>
     <message>
-        <source>Enter your Anthropic API Key</source>
-        <translation>Anthropic API Anahtarınızı girin</translation>
+        <source>Required for Claude API</source>
+        <translation>Claude API için gerekli</translation>
     </message>
     <message>
         <source>Select Surah:</source>
@@ -265,6 +329,18 @@
     <message>
         <source>Log:</source>
         <translation>Günlük:</translation>
+    </message>
+    <message>
+        <source>&lt;i&gt;Google Translate: ~15 requests/min, free but may be blocked by Google&lt;br&gt;Claude API: Higher quality, requires API key from anthropic.com&lt;/i&gt;</source>
+        <translation>&lt;i&gt;Google Çeviri: ~15 istek/dk, ücretsiz ama Google tarafından engellenebilir&lt;br&gt;Claude API: Daha yüksek kalite, anthropic.com'dan API anahtarı gerekli&lt;/i&gt;</translation>
+    </message>
+    <message>
+        <source>[INFO] Using Google Translate (free, ~15 requests/min)</source>
+        <translation>[BİLGİ] Google Çeviri kullanılıyor (ücretsiz, ~15 istek/dk)</translation>
+    </message>
+    <message>
+        <source>[INFO] Using Claude API (higher quality, requires API key)</source>
+        <translation>[BİLGİ] Claude API kullanılıyor (daha yüksek kalite, API anahtarı gerekli)</translation>
     </message>
     <message>
         <source>Warning</source>
@@ -400,12 +476,12 @@
         <translation>Latince</translation>
     </message>
     <message>
-        <source>Turkish</source>
-        <translation>Türkçe</translation>
+        <source>Turkish: %1</source>
+        <translation>Türkçe: %1</translation>
     </message>
     <message>
-        <source>English</source>
-        <translation>İngilizce</translation>
+        <source>English: %1</source>
+        <translation>İngilizce: %1</translation>
     </message>
 </context>
 </TS>

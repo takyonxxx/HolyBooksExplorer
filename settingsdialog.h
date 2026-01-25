@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QFont>
+#include <QLabel>
 #include <QComboBox>
 #include <QProgressBar>
 #include <QPushButton>
@@ -58,6 +59,7 @@ private slots:
 
 protected:
     void showEvent(QShowEvent *event) override;
+    void changeEvent(QEvent *event) override;
 
 private:
     void setupUi();
@@ -65,6 +67,7 @@ private:
     void loadSettings();
     void saveSettings();
     void loadSurahList();
+    void retranslateUi();
     
     Ui::SettingsDialog *ui;
     QFont m_font;
@@ -75,15 +78,21 @@ private:
     
     // Translation UI elements
     QGroupBox *m_translationGroup;
+    QLabel *m_serviceLabel;
     QComboBox *m_serviceCombo;     // Yeni: Servis seçimi (Claude API / Google Translate)
+    QLabel *m_apiLabel;
     QLineEdit *m_apiKeyEdit;
+    QLabel *m_surahLabel;
     QComboBox *m_surahCombo;
+    QLabel *m_typeLabel;
     QRadioButton *m_mealRadio;
     QRadioButton *m_wordRadio;
     QPushButton *m_startButton;
     QPushButton *m_cancelButton;
     QProgressBar *m_progressBar;
+    QLabel *m_logLabel;
     QTextEdit *m_logEdit;
+    QLabel *m_infoLabel;
     
     TranslationWorker *m_translationWorker;
     GoogleTranslateWorker *m_googleTranslateWorker;  // Yeni: Google Translate worker
