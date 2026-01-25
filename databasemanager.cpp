@@ -341,7 +341,10 @@ QList<WordMeaning> DatabaseManager::getWordMeanings(int suraNo, int verseNo) con
     if (!m_db.isOpen()) return meanings;
 
     QSqlQuery query(m_db);
-    query.prepare("SELECT sureno, ayet, latince, turkce, english FROM tbl_kuran_kelime WHERE sureno = ? AND ayet = ? ORDER BY latince");
+    query.prepare("SELECT sureno, ayet, latince, turkce, english "
+                  "FROM tbl_kuran_kelime "
+                  "WHERE sureno = ? AND ayet = ? ");
+
     query.addBindValue(suraNo);
     query.addBindValue(verseNo);
 
@@ -351,13 +354,12 @@ QList<WordMeaning> DatabaseManager::getWordMeanings(int suraNo, int verseNo) con
             wm.suraNo = query.value(0).toInt();
             wm.verseNo = query.value(1).toInt();
             wm.latin = query.value(2).toString();
-            wm.turkish = query.value(3).toString();            
+            wm.turkish = query.value(3).toString();
             wm.english = query.value(4).toString();
-            
+
             meanings.append(wm);
         }
     }
-
     return meanings;
 }
 
