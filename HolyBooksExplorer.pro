@@ -20,7 +20,8 @@ SOURCES += \
     searchhighlighter.cpp \
     versewidget.cpp \
     wordanalysiswidget.cpp \
-    translationworker.cpp
+    translationworker.cpp \
+    googletranslateworker.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -29,7 +30,8 @@ HEADERS += \
     searchhighlighter.h \
     versewidget.h \
     wordanalysiswidget.h \
-    translationworker.h
+    translationworker.h \
+    googletranslateworker.h
 
 FORMS += \
     mainwindow.ui \
@@ -59,3 +61,4 @@ macx {
 }
 
 #C:\Qt\6.10.0\msvc2022_64\bin\windeployqt.exe C:\Users\MSI\Desktop\HolyBooksExplorerExe\HolyBooksExplorer.exe
+#C:\Qt\6.10.0\msvc2022_64\bin\windeployqt.exe C:\Users\turka\Desktop\HolyBooksExplorerExe

@@ -10,8 +10,10 @@
 #include <QRadioButton>
 #include <QLineEdit>
 #include <QGroupBox>
+#include <QButtonGroup>
 
 class TranslationWorker;
+class GoogleTranslateWorker;
 
 namespace Ui {
 class SettingsDialog;
@@ -52,6 +54,7 @@ private slots:
     void onTranslationComplete();
     void onTranslationError(const QString &error);
     void onTranslationLog(const QString &message);
+    void onTranslationServiceChanged();
 
 protected:
     void showEvent(QShowEvent *event) override;
@@ -72,6 +75,7 @@ private:
     
     // Translation UI elements
     QGroupBox *m_translationGroup;
+    QComboBox *m_serviceCombo;     // Yeni: Servis seçimi (Claude API / Google Translate)
     QLineEdit *m_apiKeyEdit;
     QComboBox *m_surahCombo;
     QRadioButton *m_mealRadio;
@@ -82,6 +86,7 @@ private:
     QTextEdit *m_logEdit;
     
     TranslationWorker *m_translationWorker;
+    GoogleTranslateWorker *m_googleTranslateWorker;  // Yeni: Google Translate worker
 };
 
 #endif // SETTINGSDIALOG_H

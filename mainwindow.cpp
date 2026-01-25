@@ -36,27 +36,29 @@ MainWindow::MainWindow(QWidget *parent)
     applyDarkTheme();
     loadSettings();
     
-    // Always copy database from resources to ensure latest version
+    // Database path
     QString defaultPath = QCoreApplication::applicationDirPath() + "/Kutsal_Kitaplar.db";
     QString resourcePath = ":/data/Kutsal_Kitaplar.db";
     
-    // Remove old database if exists
-    if (QFile::exists(defaultPath)) {
-        QFile::remove(defaultPath);
+    // Eğer exe yanında database yoksa, resource'dan kopyala
+    if (!QFile::exists(defaultPath)) {
+        // Copy from resources
+        if (QFile::copy(resourcePath, defaultPath)) {
+            // Set file permissions to read/write
+            QFile::setPermissions(defaultPath, QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::ReadOther);
+            m_statusLabel->setText(tr("Database copied from resources"));
+        } else {
+            m_statusLabel->setText(tr("Failed to copy database from resources"));
+        }
     }
     
-    // Copy from resources
-    if (QFile::copy(resourcePath, defaultPath)) {
-        // Set file permissions to read/write
-        QFile::setPermissions(defaultPath, QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::ReadOther);
-        
-        m_databasePath = defaultPath;
-        if (m_dbManager->openDatabase(defaultPath)) {
-            loadChapters();
-            m_statusLabel->setText(tr("Database loaded successfully"));
-        }
+    // Database'i aç
+    m_databasePath = defaultPath;
+    if (m_dbManager->openDatabase(defaultPath)) {
+        loadChapters();
+        m_statusLabel->setText(tr("Database loaded successfully"));
     } else {
-        m_statusLabel->setText(tr("Failed to copy database from resources"));
+        m_statusLabel->setText(tr("Failed to open database"));
     }
 }
 

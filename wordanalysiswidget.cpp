@@ -1,142 +1,126 @@
 #include "wordanalysiswidget.h"
-#include <QHeaderView>
+#include <QLabel>
+#include <QFrame>
 
 WordAnalysisWidget::WordAnalysisWidget(QWidget *parent)
     : QWidget(parent)
     , m_language("tr")
 {
-    setupUi();
-}
-
-void WordAnalysisWidget::setupUi()
-{
-    m_layout = new QVBoxLayout(this);
-    m_layout->setContentsMargins(5, 5, 5, 5);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
     
     // Title
-    m_titleLabel = new QLabel(this);
-    m_titleLabel->setStyleSheet("font-weight: bold; font-size: 13px; color: #90CAF9; padding: 5px;");
-    m_layout->addWidget(m_titleLabel);
+    QLabel *titleLabel = new QLabel(tr("Word Analysis"), this);
+    titleLabel->setStyleSheet("QLabel { background-color: #192841; color: #DCE6F5; padding: 8px; font-weight: bold; }");
+    mainLayout->addWidget(titleLabel);
     
-    // Table - koyu tema
-    m_table = new QTableWidget(this);
-    m_table->setColumnCount(3);
-    m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
-    m_table->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_table->setAlternatingRowColors(true);
-    m_table->setStyleSheet(
-        "QTableWidget { "
-        "   background-color: #2D2D2D; "
-        "   alternate-background-color: #353535; "
-        "   gridline-color: #424242; "
-        "   border: 1px solid #424242; "
-        "   border-radius: 4px; "
-        "   color: #E0E0E0; "
-        "} "
-        "QTableWidget::item { "
-        "   padding: 4px; "
-        "} "
-        "QTableWidget::item:selected { "
-        "   background-color: #1565C0; "
-        "   color: white; "
-        "} "
-        "QHeaderView::section { "
-        "   background-color: #3D3D3D; "
-        "   color: #90CAF9; "
-        "   padding: 6px; "
-        "   border: none; "
-        "   border-bottom: 1px solid #424242; "
-        "   font-weight: bold; "
-        "}"
-        "QScrollBar:vertical { "
-        "   background-color: #2D2D2D; "
-        "   width: 10px; "
-        "} "
-        "QScrollBar::handle:vertical { "
-        "   background-color: #4D4D4D; "
-        "   border-radius: 4px; "
-        "   min-height: 20px; "
-        "} "
-        "QScrollBar::handle:vertical:hover { "
-        "   background-color: #5D5D5D; "
-        "} "
-        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { "
-        "   height: 0px; "
-        "}"
-    );
+    // Scroll area
+    m_scrollArea = new QScrollArea(this);
+    m_scrollArea->setWidgetResizable(true);
+    m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_scrollArea->setStyleSheet("QScrollArea { border: none; background-color: #0F192D; }");
     
-    m_table->horizontalHeader()->setStretchLastSection(true);
-    m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    m_table->verticalHeader()->setVisible(false);
+    // Content widget
+    m_contentWidget = new QWidget();
+    m_layout = new QVBoxLayout(m_contentWidget);
+    m_layout->setContentsMargins(8, 8, 8, 8);
+    m_layout->setSpacing(8);
+    m_layout->addStretch();
     
-    m_layout->addWidget(m_table);
+    m_scrollArea->setWidget(m_contentWidget);
+    mainLayout->addWidget(m_scrollArea);
     
-    updateHeaders();
-    
-    // Connect click signal
-    connect(m_table, &QTableWidget::cellClicked, this, [this](int row, int col) {
-        Q_UNUSED(col);
-        QTableWidgetItem *item = m_table->item(row, 0);
-        if (item) {
-            emit wordClicked(item->text());
-        }
-    });
-}
-
-void WordAnalysisWidget::updateHeaders()
-{
-    if (m_language == "tr") {
-        m_titleLabel->setText(tr("📚 Kelime Anlamları"));
-        m_table->setHorizontalHeaderLabels({tr("Latince"), tr("Türkçe"), tr("İngilizce")});
-    } else {
-        m_titleLabel->setText(tr("📚 Word Meanings"));
-        m_table->setHorizontalHeaderLabels({tr("Latin"), tr("Turkish"), tr("English")});
-    }
+    setStyleSheet("WordAnalysisWidget { background-color: #0F192D; }");
 }
 
 void WordAnalysisWidget::setWordMeanings(const QList<WordMeaning> &meanings)
 {
-    m_table->setRowCount(0);
-    m_table->setRowCount(meanings.size());
-    
-    for (int i = 0; i < meanings.size(); ++i) {
-        const WordMeaning &wm = meanings[i];
-        
-        // Latin
-        QTableWidgetItem *latinItem = new QTableWidgetItem(wm.latin);
-        latinItem->setFlags(latinItem->flags() & ~Qt::ItemIsEditable);
-        latinItem->setForeground(QColor("#B0BEC5"));
-        m_table->setItem(i, 0, latinItem);
-        
-        // Turkish
-        QTableWidgetItem *turkishItem = new QTableWidgetItem(wm.turkish);
-        turkishItem->setFlags(turkishItem->flags() & ~Qt::ItemIsEditable);
-        turkishItem->setForeground(QColor("#81C784"));
-        m_table->setItem(i, 1, turkishItem);
-        
-        // English
-        QTableWidgetItem *englishItem = new QTableWidgetItem(wm.english);
-        englishItem->setFlags(englishItem->flags() & ~Qt::ItemIsEditable);
-        englishItem->setForeground(QColor("#64B5F6"));
-        m_table->setItem(i, 2, englishItem);
-    }
-    
-    m_table->resizeRowsToContents();
+    m_meanings = meanings;
+    updateDisplay();
 }
 
-void WordAnalysisWidget::setLanguage(const QString &lang)
+void WordAnalysisWidget::setLanguage(const QString &language)
 {
-    m_language = lang;
-    updateHeaders();
-}
-
-void WordAnalysisWidget::setFont(const QFont &font)
-{
-    m_table->setFont(font);
-    m_titleLabel->setFont(font);
+    m_language = language;
+    updateDisplay();
 }
 
 void WordAnalysisWidget::clear()
 {
-    m_table->setRowCount(0);
+    m_meanings.clear();
+    updateDisplay();
+}
+
+void WordAnalysisWidget::setFont(const QFont &font)
+{
+    m_currentFont = font;
+    updateDisplay();
+}
+
+void WordAnalysisWidget::updateDisplay()
+{
+    // Clear existing widgets
+    while (m_layout->count() > 1) {
+        QLayoutItem *item = m_layout->takeAt(0);
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+    
+    if (m_meanings.isEmpty()) {
+        QLabel *emptyLabel = new QLabel(tr("No word analysis available"), this);
+        emptyLabel->setStyleSheet("QLabel { color: #7F8C9F; font-style: italic; }");
+        emptyLabel->setWordWrap(true);
+        m_layout->insertWidget(0, emptyLabel);
+        return;
+    }
+    
+    // Display word meanings
+    for (const WordMeaning &meaning : m_meanings) {
+        QFrame *wordFrame = new QFrame(this);
+        wordFrame->setStyleSheet("QFrame { background-color: #192841; border-radius: 4px; padding: 8px; }");
+        
+        QVBoxLayout *wordLayout = new QVBoxLayout(wordFrame);
+        wordLayout->setContentsMargins(8, 8, 8, 8);
+        wordLayout->setSpacing(4);
+        
+        // Latin text (Arabic pronunciation)
+        if (!meaning.latin.isEmpty()) {
+            QLabel *latinLabel = new QLabel(meaning.latin, wordFrame);
+            latinLabel->setStyleSheet("QLabel { color: #FFA500; font-weight: bold; }");
+            latinLabel->setWordWrap(true);
+            if (m_currentFont.pointSize() > 0) {
+                QFont labelFont = m_currentFont;
+                labelFont.setBold(true);
+                latinLabel->setFont(labelFont);
+            }
+            wordLayout->addWidget(latinLabel);
+        }
+        
+        // Turkish meaning
+        if (!meaning.turkish.isEmpty()) {
+            QLabel *turkishLabel = new QLabel(tr("Turkish: %1").arg(meaning.turkish), wordFrame);
+            turkishLabel->setStyleSheet("QLabel { color: #DCE6F5; }");
+            turkishLabel->setWordWrap(true);
+            if (m_currentFont.pointSize() > 0) {
+                turkishLabel->setFont(m_currentFont);
+            }
+            wordLayout->addWidget(turkishLabel);
+        }
+        
+        // English meaning
+        if (!meaning.english.isEmpty()) {
+            QLabel *englishLabel = new QLabel(tr("English: %1").arg(meaning.english), wordFrame);
+            englishLabel->setStyleSheet("QLabel { color: #A0C0FF; }");
+            englishLabel->setWordWrap(true);
+            if (m_currentFont.pointSize() > 0) {
+                englishLabel->setFont(m_currentFont);
+            }
+            wordLayout->addWidget(englishLabel);
+        }
+        
+        m_layout->insertWidget(m_layout->count() - 1, wordFrame);
+    }
 }
