@@ -9,8 +9,6 @@ VerseWidget::VerseWidget(QWidget *parent)
     : QWidget(parent)
     , m_showDetails(true)
     , m_language("tr")
-    , m_highlighter(nullptr)
-    , m_highlighterEn(nullptr)
 {
     setupUi();
 }
@@ -19,81 +17,51 @@ void VerseWidget::setupUi()
 {
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(8, 5, 8, 5);
-    m_layout->setSpacing(0);  // Boşluğu minimize et
+    m_layout->setSpacing(0);
 
     // Header label
     m_headerLabel = new QLabel(this);
-    m_headerLabel->setStyleSheet("font-weight: bold; color: #90CAF9; padding: 0px; margin: 0px;");
+    m_headerLabel->setStyleSheet("font-weight: bold; color: #90CAF9; background-color: #1A2332; padding: 4px 2px; margin: 0px; border-radius: 2px;");
     m_layout->addWidget(m_headerLabel);
 
     // Main text (Turkish) - koyu tema
-    m_textEdit = new QTextEdit(this);
-    m_textEdit->setReadOnly(true);
-    m_textEdit->setFrameStyle(QFrame::NoFrame);
-    m_textEdit->setStyleSheet("background-color: transparent; color: #E0E0E0; padding: 0px; margin: 0px;");
-    m_textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_textEdit->document()->setDocumentMargin(0);  // Negatif margin dene
-    m_textEdit->setLineWrapMode(QTextEdit::WidgetWidth);
-    m_textEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    m_textEdit->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-    m_textEdit->setContentsMargins(0, 0, 0, 0);
-    m_textEdit->viewport()->setContentsMargins(0, 0, 0, 0);
-    m_layout->addWidget(m_textEdit);
+    m_textLabel = new QLabel(this);
+    m_textLabel->setWordWrap(true);
+    m_textLabel->setTextFormat(Qt::RichText);
+    m_textLabel->setStyleSheet("background-color: #333333; color: #E0E0E0; padding: 2px; margin: 0px; border-radius: 2px;");
+    m_textLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    m_textLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    m_layout->addWidget(m_textLabel);
 
     // English text - koyu tema
-    m_textEnEdit = new QTextEdit(this);
-    m_textEnEdit->setReadOnly(true);
-    m_textEnEdit->setFrameStyle(QFrame::NoFrame);
-    m_textEnEdit->setStyleSheet("background-color: #1E3A5F; color: #81D4FA; padding: 0px; margin: 0px; border-radius: 2px;");
-    m_textEnEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_textEnEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_textEnEdit->document()->setDocumentMargin(0);
-    m_textEnEdit->setLineWrapMode(QTextEdit::WidgetWidth);
-    m_textEnEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    m_textEnEdit->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-    m_textEnEdit->setContentsMargins(0, 0, 0, 0);
-    m_textEnEdit->viewport()->setContentsMargins(0, 0, 0, 0);
-    m_textEnEdit->hide();
-    m_layout->addWidget(m_textEnEdit);
+    m_textEnLabel = new QLabel(this);
+    m_textEnLabel->setWordWrap(true);
+    m_textEnLabel->setTextFormat(Qt::RichText);
+    m_textEnLabel->setStyleSheet("background-color: #1E3A5F; color: #81D4FA; padding: 2px; margin: 0px; border-radius: 2px;");
+    m_textEnLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    m_textEnLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    m_textEnLabel->hide();
+    m_layout->addWidget(m_textEnLabel);
 
     // Arabic text (for Quran) - koyu tema
-    m_arabicEdit = new QTextEdit(this);
-    m_arabicEdit->setReadOnly(true);
-    m_arabicEdit->setFrameStyle(QFrame::NoFrame);
-    m_arabicEdit->setStyleSheet("background-color: #1B5E20; color: #A5D6A7; padding: 0px; margin: 0px; border-radius: 2px;");
-    m_arabicEdit->setAlignment(Qt::AlignRight);
-    m_arabicEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_arabicEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_arabicEdit->setLayoutDirection(Qt::RightToLeft);
-    m_arabicEdit->document()->setDocumentMargin(0);
-    m_arabicEdit->setLineWrapMode(QTextEdit::WidgetWidth);
-    m_arabicEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    m_arabicEdit->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-    m_arabicEdit->setContentsMargins(0, 0, 0, 0);
-    m_arabicEdit->viewport()->setContentsMargins(0, 0, 0, 0);
-    m_arabicEdit->hide();
-    m_layout->addWidget(m_arabicEdit);
+    m_arabicLabel = new QLabel(this);
+    m_arabicLabel->setWordWrap(true);
+    m_arabicLabel->setTextFormat(Qt::PlainText);
+    m_arabicLabel->setStyleSheet("background-color: #1B5E20; color: #A5D6A7; padding: 2px; margin: 0px; border-radius: 2px;");
+    m_arabicLabel->setAlignment(Qt::AlignRight | Qt::AlignTop);
+    m_arabicLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    m_arabicLabel->hide();
+    m_layout->addWidget(m_arabicLabel);
 
     // Latin transliteration (for Quran) - koyu tema
-    m_latinEdit = new QTextEdit(this);
-    m_latinEdit->setReadOnly(true);
-    m_latinEdit->setFrameStyle(QFrame::NoFrame);
-    m_latinEdit->setStyleSheet("background-color: #4A4A00; color: #FFEB3B; padding: 0px; margin: 0px; border-radius: 2px;");
-    m_latinEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_latinEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_latinEdit->document()->setDocumentMargin(0);
-    m_latinEdit->setLineWrapMode(QTextEdit::WidgetWidth);
-    m_latinEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    m_latinEdit->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-    m_latinEdit->setContentsMargins(0, 0, 0, 0);
-    m_latinEdit->viewport()->setContentsMargins(0, 0, 0, 0);
-    m_latinEdit->hide();
-    m_layout->addWidget(m_latinEdit);
-
-    // Create highlighters
-    m_highlighter = new SearchHighlighter(m_textEdit->document());
-    m_highlighterEn = new SearchHighlighter(m_textEnEdit->document());
+    m_latinLabel = new QLabel(this);
+    m_latinLabel->setWordWrap(true);
+    m_latinLabel->setTextFormat(Qt::PlainText);
+    m_latinLabel->setStyleSheet("background-color: #4A4A00; color: #FFEB3B; padding: 2px; margin: 0px; border-radius: 2px;");
+    m_latinLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    m_latinLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    m_latinLabel->hide();
+    m_layout->addWidget(m_latinLabel);
 
     // Style the widget - koyu tema
     setStyleSheet("VerseWidget { background-color: #2D2D2D; border: 1px solid #424242; border-radius: 3px; margin: 1px; }");
@@ -124,61 +92,83 @@ void VerseWidget::updateDisplay()
     m_headerLabel->setText(header);
 
     // Set main text - always show Turkish text regardless of UI language
-    m_textEdit->setPlainText(m_verse.text);
-    m_textEdit->updateGeometry();
+    m_textLabel->setText(highlightText(m_verse.text, m_searchText));
 
     // Show English translation if available - always show regardless of UI language
     if (m_showDetails && !m_verse.textEn.isEmpty()) {
-        m_textEnEdit->setPlainText(m_verse.textEn);
-        m_textEnEdit->updateGeometry();
-        m_textEnEdit->show();
+        m_textEnLabel->setText(highlightText(m_verse.textEn, m_searchText));
+        m_textEnLabel->show();
     } else {
-        m_textEnEdit->hide();
+        m_textEnLabel->hide();
     }
 
     // Show Arabic for Quran
     if (m_showDetails && !m_verse.arabic.isEmpty()) {
-        m_arabicEdit->setPlainText(m_verse.arabic);
-        m_arabicEdit->updateGeometry();
-        m_arabicEdit->show();
+        m_arabicLabel->setText(m_verse.arabic);
+        m_arabicLabel->show();
     } else {
-        m_arabicEdit->hide();
+        m_arabicLabel->hide();
     }
 
     // Show Latin for Quran
     if (m_showDetails && !m_verse.latin.isEmpty()) {
-        m_latinEdit->setPlainText(m_verse.latin);
-        m_latinEdit->updateGeometry();
-        m_latinEdit->show();
+        m_latinLabel->setText(m_verse.latin);
+        m_latinLabel->show();
     } else {
-        m_latinEdit->hide();
-    }
-
-    // Re-apply highlight if set
-    if (!m_searchText.isEmpty()) {
-        m_highlighter->setSearchText(m_searchText);
-        m_highlighterEn->setSearchText(m_searchText);
+        m_latinLabel->hide();
     }
 }
 
 void VerseWidget::setSearchHighlight(const QString &searchText)
 {
     m_searchText = searchText;
-    m_highlighter->setSearchText(searchText);
-    m_highlighterEn->setSearchText(searchText);
+    updateDisplay();
+}
+
+QString VerseWidget::highlightText(const QString &text, const QString &searchText)
+{
+    if (searchText.isEmpty()) {
+        return text.toHtmlEscaped();
+    }
+
+    QString result = text;
+    int pos = 0;
+    QString highlighted = result;
+    QString searchLower = searchText.toLower();
+
+    // HTML escape first
+    result = result.toHtmlEscaped();
+    highlighted = "";
+
+    pos = 0;
+    while (pos < text.length()) {
+        int foundPos = text.toLower().indexOf(searchLower, pos);
+        if (foundPos == -1) {
+            highlighted += text.mid(pos).toHtmlEscaped();
+            break;
+        }
+
+        highlighted += text.mid(pos, foundPos - pos).toHtmlEscaped();
+        highlighted += "<span style='background-color: #FFFF00; color: #000000;'>";
+        highlighted += text.mid(foundPos, searchText.length()).toHtmlEscaped();
+        highlighted += "</span>";
+        pos = foundPos + searchText.length();
+    }
+
+    return highlighted;
 }
 
 void VerseWidget::setFont(const QFont &font)
 {
     // Aynı fontu tüm alanlara uygula
-    m_textEdit->setFont(font);
-    m_textEnEdit->setFont(font);
-    m_latinEdit->setFont(font);
+    m_textLabel->setFont(font);
+    m_textEnLabel->setFont(font);
+    m_latinLabel->setFont(font);
 
     // Arapça için biraz daha büyük font
     QFont arabicFont = font;
     arabicFont.setPointSize(font.pointSize() + 2);
-    m_arabicEdit->setFont(arabicFont);
+    m_arabicLabel->setFont(arabicFont);
 
     // Header için bold
     QFont headerFont = font;
@@ -194,13 +184,13 @@ void VerseWidget::clear()
 {
     m_verse = Verse();
     m_headerLabel->clear();
-    m_textEdit->clear();
-    m_textEnEdit->clear();
-    m_textEnEdit->hide();
-    m_arabicEdit->clear();
-    m_arabicEdit->hide();
-    m_latinEdit->clear();
-    m_latinEdit->hide();
+    m_textLabel->clear();
+    m_textEnLabel->clear();
+    m_textEnLabel->hide();
+    m_arabicLabel->clear();
+    m_arabicLabel->hide();
+    m_latinLabel->clear();
+    m_latinLabel->hide();
 }
 
 void VerseWidget::mousePressEvent(QMouseEvent *event)

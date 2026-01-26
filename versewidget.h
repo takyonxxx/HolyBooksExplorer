@@ -2,7 +2,6 @@
 #define VERSEWIDGET_H
 
 #include <QWidget>
-#include <QTextEdit>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "databasemanager.h"
@@ -34,6 +33,7 @@ protected:
 private:
     void setupUi();
     void updateDisplay();
+    QString highlightText(const QString &text, const QString &searchText);
 
     Verse m_verse;
     bool m_showDetails;
@@ -41,13 +41,11 @@ private:
 
     QVBoxLayout *m_layout;
     QLabel *m_headerLabel;
-    QTextEdit *m_textEdit;
-    QTextEdit *m_textEnEdit;  // İngilizce metin
-    QTextEdit *m_arabicEdit;
-    QTextEdit *m_latinEdit;
+    QLabel *m_textLabel;
+    QLabel *m_textEnLabel;  // İngilizce metin
+    QLabel *m_arabicLabel;
+    QLabel *m_latinLabel;
 
-    SearchHighlighter *m_highlighter;
-    SearchHighlighter *m_highlighterEn;
     QString m_searchText;
 };
 
