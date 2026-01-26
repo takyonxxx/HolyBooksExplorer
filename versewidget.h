@@ -14,13 +14,13 @@ class VerseWidget : public QWidget
 
 public:
     explicit VerseWidget(QWidget *parent = nullptr);
-    
+
     void setVerse(const Verse &verse, bool showDetails = true);
     void setSearchHighlight(const QString &searchText);
     void setFont(const QFont &font);
     void setLanguage(const QString &lang);
     void clear();
-    
+
     Verse currentVerse() const { return m_verse; }
 
 signals:
@@ -34,18 +34,18 @@ protected:
 private:
     void setupUi();
     void updateDisplay();
-    
+
     Verse m_verse;
     bool m_showDetails;
     QString m_language;
-    
+
     QVBoxLayout *m_layout;
     QLabel *m_headerLabel;
     QTextEdit *m_textEdit;
     QTextEdit *m_textEnEdit;  // İngilizce metin
     QTextEdit *m_arabicEdit;
     QTextEdit *m_latinEdit;
-    
+
     SearchHighlighter *m_highlighter;
     SearchHighlighter *m_highlighterEn;
     QString m_searchText;

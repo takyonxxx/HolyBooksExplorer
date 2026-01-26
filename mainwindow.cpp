@@ -19,14 +19,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , m_dbManager(new DatabaseManager(this))
     , m_currentBook(DatabaseManager::Quran)
-    , m_currentChapter(1)
-    , m_showArabic(true)
-    , m_showLatin(true)
-    , m_highlightColor(Qt::yellow)
+    , m_currentChapter(1)    
     , m_bookLabel(nullptr)
     , m_chapterLabel(nullptr)
     , m_sortLabel(nullptr)
     , m_searchLabel(nullptr)
+    , m_showArabic(true)
+    , m_showLatin(true)
+    , m_highlightColor(Qt::yellow)
 {
     ui->setupUi(this);
     setupUi();
