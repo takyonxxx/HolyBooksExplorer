@@ -19,11 +19,11 @@ void VerseWidget::setupUi()
 {
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(8, 5, 8, 5);
-    m_layout->setSpacing(2);
+    m_layout->setSpacing(0);  // Boşluğu minimize et
 
     // Header label
     m_headerLabel = new QLabel(this);
-    m_headerLabel->setStyleSheet("font-weight: bold; color: #90CAF9; padding: 1px 0px;");
+    m_headerLabel->setStyleSheet("font-weight: bold; color: #90CAF9; padding: 0px; margin: 0px;");
     m_layout->addWidget(m_headerLabel);
 
     // Main text (Turkish) - koyu tema
@@ -33,7 +33,7 @@ void VerseWidget::setupUi()
     m_textEdit->setStyleSheet("background-color: transparent; color: #E0E0E0; padding: 0px; margin: 0px;");
     m_textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_textEdit->document()->setDocumentMargin(0);
+    m_textEdit->document()->setDocumentMargin(0);  // Negatif margin dene
     m_textEdit->setLineWrapMode(QTextEdit::WidgetWidth);
     m_textEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     m_textEdit->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
@@ -45,7 +45,7 @@ void VerseWidget::setupUi()
     m_textEnEdit = new QTextEdit(this);
     m_textEnEdit->setReadOnly(true);
     m_textEnEdit->setFrameStyle(QFrame::NoFrame);
-    m_textEnEdit->setStyleSheet("background-color: #1E3A5F; color: #81D4FA; padding: 1px; margin: 0px; border-radius: 2px;");
+    m_textEnEdit->setStyleSheet("background-color: #1E3A5F; color: #81D4FA; padding: 0px; margin: 0px; border-radius: 2px;");
     m_textEnEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_textEnEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_textEnEdit->document()->setDocumentMargin(0);
@@ -61,7 +61,7 @@ void VerseWidget::setupUi()
     m_arabicEdit = new QTextEdit(this);
     m_arabicEdit->setReadOnly(true);
     m_arabicEdit->setFrameStyle(QFrame::NoFrame);
-    m_arabicEdit->setStyleSheet("background-color: #1B5E20; color: #A5D6A7; padding: 1px; margin: 0px; border-radius: 2px;");
+    m_arabicEdit->setStyleSheet("background-color: #1B5E20; color: #A5D6A7; padding: 0px; margin: 0px; border-radius: 2px;");
     m_arabicEdit->setAlignment(Qt::AlignRight);
     m_arabicEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_arabicEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -79,7 +79,7 @@ void VerseWidget::setupUi()
     m_latinEdit = new QTextEdit(this);
     m_latinEdit->setReadOnly(true);
     m_latinEdit->setFrameStyle(QFrame::NoFrame);
-    m_latinEdit->setStyleSheet("background-color: #4A4A00; color: #FFEB3B; padding: 1px; margin: 0px; border-radius: 2px;");
+    m_latinEdit->setStyleSheet("background-color: #4A4A00; color: #FFEB3B; padding: 0px; margin: 0px; border-radius: 2px;");
     m_latinEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_latinEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_latinEdit->document()->setDocumentMargin(0);
