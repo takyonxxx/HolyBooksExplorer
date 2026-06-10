@@ -20,6 +20,8 @@ GoogleTranslateWorker::GoogleTranslateWorker(QObject *parent)
     , m_processTimer(new QTimer(this))
     , m_requestCount(0)
     , m_rateLimitTimer(new QTimer(this))
+    , m_retryCount(0)
+    , m_consecutiveErrors(0)
 {
     connect(m_networkManager, &QNetworkAccessManager::finished,
             this, &GoogleTranslateWorker::onNetworkReply);
@@ -59,6 +61,8 @@ void GoogleTranslateWorker::startTranslation(int sureNo, TranslationType type)
     m_sureList.clear();
     m_currentSureIndex = 0;
     m_requestCount = 0;
+    m_retryCount = 0;
+    m_consecutiveErrors = 0;
     
     // Rate limit timer'ı başlat
     m_rateLimitTimer->start();
@@ -311,6 +315,12 @@ void GoogleTranslateWorker::sendTranslationRequest(const QString &text, int reco
     
     // Store index in request for later retrieval
     request.setAttribute(QNetworkRequest::User, recordId);
+
+    // Asili kalan istegin tum pipeline'i dondurmesini onle:
+    // yanit gelmezse istek timeout ile hata verir ve retry mekanizmasi devreye girer.
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    request.setTransferTimeout(REQUEST_TIMEOUT_MS);
+#endif
     
     emit logMessage(tr("Sending request for: %1...").arg(text.left(40)));
     
@@ -358,6 +368,42 @@ QString GoogleTranslateWorker::extractTranslation(const QString &responseData)
     return result.trimmed();
 }
 
+// Arka arkaya hata sayisina gore kademeli bekleme suresi: 4s, 8s, 16s, 32s, 64s, 120s(tavan)
+int GoogleTranslateWorker::backoffDelayMs() const
+{
+    int shift = qMin(m_consecutiveErrors, 5);
+    int delay = BASE_DELAY_MS * (1 << shift);
+    return qMin(delay, MAX_BACKOFF_MS);
+}
+
+// Hata/bos yanit durumunda: ayni item'i tekrar dene; deneme hakki bitince atla.
+// Her iki durumda da pipeline KESINTISIZ devam eder (process asla durmaz).
+void GoogleTranslateWorker::scheduleRetryOrSkip(const QString &reason)
+{
+    int delay = backoffDelayMs();
+
+    if (m_retryCount < MAX_RETRIES) {
+        m_retryCount++;
+        emit logMessage(tr("%1 - retrying same item (attempt %2/%3) in %4 s...")
+                        .arg(reason)
+                        .arg(m_retryCount)
+                        .arg(MAX_RETRIES)
+                        .arg(delay / 1000));
+        // index'i ARTIRMA: ayni item tekrar islenecek
+        m_processTimer->start(delay);
+        return;
+    }
+
+    // Deneme hakki bitti: bu item'i atla (bir sonraki calistirmada DB sorgusu tarafindan tekrar denenir)
+    emit logMessage(tr("%1 - max retries reached, skipping item %2")
+                    .arg(reason)
+                    .arg(m_currentIndex));
+    m_retryCount = 0;
+    m_currentIndex++;
+    emit progressChanged(m_currentIndex, m_totalItems);
+    m_processTimer->start(delay);
+}
+
 void GoogleTranslateWorker::onNetworkReply(QNetworkReply *reply)
 {
     reply->deleteLater();
@@ -369,13 +415,10 @@ void GoogleTranslateWorker::onNetworkReply(QNetworkReply *reply)
     int itemIndex = reply->request().attribute(QNetworkRequest::User).toInt();
     
     if (reply->error() != QNetworkReply::NoError) {
-        QString errorMsg = tr("Network error: %1").arg(reply->errorString());
-        emit logMessage(errorMsg);
-        
-        // Skip this item and continue
-        m_currentIndex++;
-        emit progressChanged(m_currentIndex, m_totalItems);
-        m_processTimer->start(4000);  // 4 saniye bekle
+        // Ag/protokol/timeout hatasi: arka arkaya hata sayacini artir ve ayni item'i tekrar dene.
+        m_consecutiveErrors++;
+        emit logMessage(tr("Network error: %1").arg(reply->errorString()));
+        scheduleRetryOrSkip(tr("Network error"));
         return;
     }
     
@@ -383,11 +426,12 @@ void GoogleTranslateWorker::onNetworkReply(QNetworkReply *reply)
     QString translation = extractTranslation(QString::fromUtf8(responseData));
     
     if (translation.isEmpty()) {
+        // Bos yanit genelde Google'in yumusak bloku/gecici hatasidir (JSON yerine HTML doner).
+        // Atlamak yerine ayni item'i tekrar dene.
+        m_consecutiveErrors++;
         emit logMessage(tr("Empty translation received for item %1").arg(itemIndex));
         emit logMessage(tr("Raw response: %1").arg(QString::fromUtf8(responseData).left(200)));
-        m_currentIndex++;
-        emit progressChanged(m_currentIndex, m_totalItems);
-        m_processTimer->start(2000);
+        scheduleRetryOrSkip(tr("Empty translation"));
         return;
     }
     
@@ -438,8 +482,12 @@ void GoogleTranslateWorker::onNetworkReply(QNetworkReply *reply)
     
     m_currentIndex++;
     emit progressChanged(m_currentIndex, m_totalItems);
+
+    // Basarili istek: backoff ve retry sayaclarini sifirla, normal hiza don.
+    m_consecutiveErrors = 0;
+    m_retryCount = 0;
     
     // Google'ın rate limit'ine takılmamak için bekleme süresi
     // Her istek arasında 4 saniye bekle (dakikada ~15 istek)
-    m_processTimer->start(4000);
+    m_processTimer->start(BASE_DELAY_MS);
 }

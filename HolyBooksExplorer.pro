@@ -1,7 +1,5 @@
 QT       += core gui widgets sql network
 
-greaterThan(QT_MAJOR_VERSION, 5): QT += core5compat
-
 CONFIG += c++17
 
 TARGET = HolyBooksExplorer

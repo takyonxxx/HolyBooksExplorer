@@ -43,6 +43,8 @@ private:
     void sendTranslationRequest(const QString &text, int recordId);
     void processNextSure();
     QString extractTranslation(const QString &html);
+    int backoffDelayMs() const;
+    void scheduleRetryOrSkip(const QString &reason);
     
     QNetworkAccessManager *m_networkManager;
     QString m_dbPath;
@@ -73,6 +75,14 @@ private:
     int m_requestCount;
     QTimer *m_rateLimitTimer;
     static const int MAX_REQUESTS_PER_MINUTE = 15; // Google'ın rate limit'ini aşmamak için
+
+    // Otomatik yeniden deneme / kademeli bekleme (self-healing)
+    int m_retryCount;          // mevcut item icin yapilan deneme sayisi
+    int m_consecutiveErrors;   // arka arkaya hata sayisi (adaptive backoff icin)
+    static const int MAX_RETRIES = 5;          // bir item icin maksimum deneme
+    static const int BASE_DELAY_MS = 4000;     // istekler arasi normal bekleme (~15/dk)
+    static const int MAX_BACKOFF_MS = 120000;  // backoff tavani (2 dakika)
+    static const int REQUEST_TIMEOUT_MS = 15000; // tek istek icin transfer timeout (asili kalmayi onler)
 };
 
 #endif // GOOGLETRANSLATEWORKER_H
